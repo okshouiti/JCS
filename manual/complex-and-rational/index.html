@@ -1,0 +1,52 @@
+<!doctype html> <html lang=ja > <meta charset=UTF-8 > <meta name=viewport  content="width=device-width, initial-scale=1"> <link rel=stylesheet  href="/libs/katex/katex.min.css"> <script src="/libs/main.js"></script> <link rel=stylesheet  href="/css/reboot.css"> <link rel=stylesheet  href="/css/main.css"> <link rel=icon  href="/assets/favicon.png"> <title>複素数と有理数</title> <style> span.name { color: #50b949; font-family: Cica } </style> <div class=sidebar > <div class="container sidebar-sticky"> <div class=sidebar-about > <div class=top >JCS</div> <div class=lead >Julia Cheat Site.</div> </div> <nav class=sidebar-nav > <ul class=menu-list > <li class=menu-parent ><a href="/" class=menu-link >トップ</a> <li class="menu-parent active"><a href="/manual/getting-started/" class=menu-link >マニュアル</a> <ul class=menu-child > <li><a class="" href="/manual/getting-started/">はじめる</a> <li><a class="" href="/manual/variables/">変数</a> <li><a class="" href="/manual/int-and-float/">整数と浮動小数点数</a> <li><a class="" href="/manual/operations/">数理演算と初歩的な関数</a> <li><a class=active  href="/manual/complex-and-rational/">複素数と有理数</a> <li><a class="" href="/manual/strings/">文字列</a> <li><a class="" href="/manual/functions/">関数</a> <li><a class="" href="/manual/control-flow/">制御構造</a> <li><a class="" href="/manual/scope/">スコープ</a> <li><a class="" href="/manual/type/">型</a> </ul> <!-- <li class="menu-parent {{ispage base/*}}active{{end}}"><a href="/base/essentials/" class=menu-link >Base</a> <ul class=menu-child > {{for p in base}} <li><a class="{{ispage {{p}}}}active{{end}}" href="/{{fill p}}/">{{fill title p}}</a> {{end}} </ul> <li class="menu-parent {{ispage omake/*}}active{{end}}"><a href="/omake/Cascadia.jl/" class=menu-link >おまけ</a> <ul class=menu-child > {{for p in omake}} <li><a class="{{ispage {{p}}}}active{{end}}" href="/{{fill p}}/">{{fill title p}}</a> {{end}} </ul> --> </ul> </nav> </div> </div> <div class="content container"> <header> <div class=sidebar-button  onclick="toggle()"> <div class=bar1 ></div> <div class=bar2 ></div> <div class=bar3 ></div> </div> </header> <div class=franklin-content ><h1 id="複素数と有理数"><a href="#複素数と有理数">複素数と有理数</a></h1> <div class=franklin-toc ><ol><li><a href="#複素数">複素数</a><li><a href="#有理数">有理数</a></ol></div> <p>Juliaには複素数と有理数が用意されており、これらには前項で紹介したような演算子・関数が使えます。</p> <h2 id="複素数"><a href="#複素数">複素数</a></h2> <p>数学で複素数は<span class=katex ><span class=katex-mathml ><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mo>+</mo><mn>5</mn><mi>i</mi></mrow><annotation encoding="application/x-tex">2 + 5i</annotation></semantics></math></span><span class=katex-html  aria-hidden=true ><span class=base ><span class=strut  style="height:0.72777em;vertical-align:-0.08333em;"></span><span class=mord >2</span><span class=mspace  style="margin-right:0.2222222222222222em;"></span><span class=mbin >+</span><span class=mspace  style="margin-right:0.2222222222222222em;"></span></span><span class=base ><span class=strut  style="height:0.65952em;vertical-align:0em;"></span><span class=mord >5</span><span class="mord mathdefault">i</span></span></span></span>のように<span class=katex ><span class=katex-mathml ><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class=katex-html  aria-hidden=true ><span class=base ><span class=strut  style="height:0.65952em;vertical-align:0em;"></span><span class="mord mathdefault">i</span></span></span></span>を用いますが、Juliaでは<code>im</code>を使って<code>2 &#43; 5im</code>と表現します。もちろん複素数でも様々な算術演算子が利用できます。虚部に数値リテラルではなく変数を使う場合は変数と<code>im</code>の間に<code>*</code>を明示する必要があります。</p> <pre><code class="julia hljs">a,b = <span class=hljs-number >2</span>,<span class=hljs-number >3</span>
+
+a + b*<span class=hljs-literal >im</span>   <span class=hljs-comment ># -&gt; 2 + 3im</span>
+
+(<span class=hljs-number >1</span> + <span class=hljs-number >2</span><span class=hljs-literal >im</span>)*(<span class=hljs-number >2</span> - <span class=hljs-number >3</span><span class=hljs-literal >im</span>)   <span class=hljs-comment ># -&gt; 8 + 1im</span>
+
+(-<span class=hljs-number >1</span> + <span class=hljs-number >2</span><span class=hljs-literal >im</span>)^<span class=hljs-number >2.5</span>   <span class=hljs-comment ># -&gt; 2.729624464784009 - 6.9606644595719im</span>
+
+<span class=hljs-number >3</span>(<span class=hljs-number >2</span> - <span class=hljs-number >5</span><span class=hljs-literal >im</span>)   <span class=hljs-comment ># -&gt; 6 - 15im</span>
+
+<span class=hljs-number >2</span><span class=hljs-literal >im</span>^<span class=hljs-number >2</span>   <span class=hljs-comment ># -&gt; -2 + 0im</span>
+
+<span class=hljs-number >1</span> + <span class=hljs-number >3</span>/<span class=hljs-number >4</span><span class=hljs-literal >im</span>   <span class=hljs-comment ># -&gt; 1.0 - 0.75im</span></code></pre> <p>以下に代表される複素数用の関数も用意されています。</p> <pre><code class="julia hljs">c = complex(<span class=hljs-number >1</span>, <span class=hljs-number >2</span>)   <span class=hljs-comment ># -&gt; 1 + 2im</span>
+
+<span class=hljs-comment ># 実部</span>
+real(c)   <span class=hljs-comment ># -&gt; 1</span>
+
+<span class=hljs-comment ># 虚部</span>
+imag(c)   <span class=hljs-comment ># -&gt; 2</span>
+
+<span class=hljs-comment ># 複素共役</span>
+conj(C)   <span class=hljs-comment ># -&gt; 1 - 2im</span></code></pre> <h2 id="有理数"><a href="#有理数">有理数</a></h2> <p>有理数も簡単に使えます。分子a,分母bの有理数を<code>a//b</code>と表現します。当然ですがこのときa,bは整数です。また、分母が正の整数になるよう自動的に約分されます。</p> <pre><code class="julia hljs"><span class=hljs-number >2</span>//<span class=hljs-number >3</span>
+
+-<span class=hljs-number >4</span>//<span class=hljs-number >8</span>   <span class=hljs-comment ># -&gt; -1//2</span>
+
+-<span class=hljs-number >4</span>//-<span class=hljs-number >12</span>   <span class=hljs-comment ># -&gt; 1//3</span></code></pre> <p>約分後の分子と分母はnumerator関数およびdenominator関数でそれぞれ抜き出すことができ、<code>float</code>関数を使えば有理数を浮動小数点数に変換できます。</p> <pre><code class="julia hljs">r = <span class=hljs-number >3</span>//-<span class=hljs-number >4</span>   <span class=hljs-comment ># -&gt; -3//4</span>
+
+numerator(r)   <span class=hljs-comment ># -&gt; -3</span>
+
+denominator(r)   <span class=hljs-comment ># -&gt; 4</span>
+
+float(r)   <span class=hljs-comment ># -&gt; -0.75</span></code></pre> <p>有理数同士の計算はもちろん、その他の数値とも一緒に計算をすることができます。</p> <pre><code class="julia hljs"><span class=hljs-number >5</span>//<span class=hljs-number >12</span> - <span class=hljs-number >1</span>//<span class=hljs-number >4</span>   <span class=hljs-comment ># -&gt; 1//6</span>
+
+<span class=hljs-number >5</span>//<span class=hljs-number >8</span> * <span class=hljs-number >3</span>//<span class=hljs-number >12</span>   <span class=hljs-comment ># -&gt; 5//32</span>
+
+<span class=hljs-number >3</span>//<span class=hljs-number >5</span> + <span class=hljs-number >1</span>   <span class=hljs-comment ># -&gt; 8//5</span>
+
+<span class=hljs-number >2</span>//<span class=hljs-number >7</span> * (<span class=hljs-number >1</span> + <span class=hljs-number >2</span><span class=hljs-literal >im</span>)   <span class=hljs-comment ># -&gt; 2//7 + 4//7*im</span>
+
+<span class=hljs-number >2</span>//<span class=hljs-number >7</span> * (<span class=hljs-number >1.5</span> + <span class=hljs-number >2</span><span class=hljs-literal >im</span>)   <span class=hljs-comment ># -&gt; 0.42857142857142855 + 0.5714285714285714im</span>
+
+<span class=hljs-number >2</span>//<span class=hljs-number >3</span> == <span class=hljs-number >6</span>//<span class=hljs-number >9</span>   <span class=hljs-comment ># -&gt; true</span>
+
+<span class=hljs-number >3</span>//<span class=hljs-number >4</span> &lt; <span class=hljs-number >2</span>//<span class=hljs-number >4</span>   <span class=hljs-comment ># -&gt; false</span>
+
+<span class=hljs-number >0.5</span> == <span class=hljs-number >1</span>//<span class=hljs-number >2</span>   <span class=hljs-comment ># -&gt; true</span>
+
+<span class=hljs-number >0.33</span> == <span class=hljs-number >1</span>//<span class=hljs-number >3</span>   <span class=hljs-comment ># -&gt; false</span>
+
+<span class=hljs-number >0.33</span> &lt; <span class=hljs-number >1</span>//<span class=hljs-number >3</span>   <span class=hljs-comment ># -&gt; true</span>
+
+float(<span class=hljs-number >1</span>//<span class=hljs-number >3</span>)   <span class=hljs-comment ># -&gt; 0.3333333333333333</span></code></pre> <div class=page-foot > <div class=copyright > &copy; okshouiti. 最終更新: 2021-01-18. <small>built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a></small>. </div> </div> </div> </div>

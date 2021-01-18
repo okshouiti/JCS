@@ -1,0 +1,125 @@
+<!doctype html> <html lang=ja > <meta charset=UTF-8 > <meta name=viewport  content="width=device-width, initial-scale=1"> <script src="/libs/main.js"></script> <link rel=stylesheet  href="/css/reboot.css"> <link rel=stylesheet  href="/css/main.css"> <link rel=icon  href="/assets/favicon.png"> <title>スコープ</title> <style> span.name { color: #50b949; font-family: Cica } </style> <div class=sidebar > <div class="container sidebar-sticky"> <div class=sidebar-about > <div class=top >JCS</div> <div class=lead >Julia Cheat Site.</div> </div> <nav class=sidebar-nav > <ul class=menu-list > <li class=menu-parent ><a href="/" class=menu-link >トップ</a> <li class="menu-parent active"><a href="/manual/getting-started/" class=menu-link >マニュアル</a> <ul class=menu-child > <li><a class="" href="/manual/getting-started/">はじめる</a> <li><a class="" href="/manual/variables/">変数</a> <li><a class="" href="/manual/int-and-float/">整数と浮動小数点数</a> <li><a class="" href="/manual/operations/">数理演算と初歩的な関数</a> <li><a class="" href="/manual/complex-and-rational/">複素数と有理数</a> <li><a class="" href="/manual/strings/">文字列</a> <li><a class="" href="/manual/functions/">関数</a> <li><a class="" href="/manual/control-flow/">制御構造</a> <li><a class=active  href="/manual/scope/">スコープ</a> <li><a class="" href="/manual/type/">型</a> </ul> <!-- <li class="menu-parent {{ispage base/*}}active{{end}}"><a href="/base/essentials/" class=menu-link >Base</a> <ul class=menu-child > {{for p in base}} <li><a class="{{ispage {{p}}}}active{{end}}" href="/{{fill p}}/">{{fill title p}}</a> {{end}} </ul> <li class="menu-parent {{ispage omake/*}}active{{end}}"><a href="/omake/Cascadia.jl/" class=menu-link >おまけ</a> <ul class=menu-child > {{for p in omake}} <li><a class="{{ispage {{p}}}}active{{end}}" href="/{{fill p}}/">{{fill title p}}</a> {{end}} </ul> --> </ul> </nav> </div> </div> <div class="content container"> <header> <div class=sidebar-button  onclick="toggle()"> <div class=bar1 ></div> <div class=bar2 ></div> <div class=bar3 ></div> </div> </header> <div class=franklin-content ><h1 id="スコープ"><a href="#スコープ">スコープ</a></h1> <p>-変数の参照可能範囲-</p> <p>プログラム中の構造の多くはスコープと呼ばれる範囲を持つ。スコープは変数を参照できる範囲のことで、変数名の重複による意図せざる動作を避けるなど多くの恩恵がある。</p> <div class=franklin-toc ><ol><li><a href="#構造ごとのスコープ">構造ごとのスコープ</a><li><a href="#グローバルスコープ">グローバルスコープ</a><li><a href="#ローカルスコープ">ローカルスコープ</a><ol><li><a href="#letブロック"><code>Let</code>ブロック</a><li><a href="#ループにおけるスコープ">ループにおけるスコープ</a><li><a href="#定数">定数</a></ol></ol></div> <h2 id="構造ごとのスコープ"><a href="#構造ごとのスコープ">構造ごとのスコープ</a></h2> <table><tr><th align=left >構造<th align=left >スコープ<th align=left >配置できる場所<tr><td align=left ><code>module</code>, <code>baremodule</code><td align=left >グローバル<td align=left >グローバル<tr><td align=left ><code>struct</code><td align=left >ソフトローカル<td align=left >グローバル<tr><td align=left ><code>for</code>, <code>while</code>, <code>try</code><td align=left >ソフトローカル<td align=left >すべて（global or local）<tr><td align=left ><code>macro</code><td align=left >ハードローカル<td align=left >グローバル<tr><td align=left ><code>let</code>, 関数, 内包リスト, ジェネレータ<td align=left >ハードローカル<td align=left >すべて<tr><td align=left ><code>begin</code>, <code>if</code><td align=left >導入なし<td align=left >すべて</table> <p>Juliaのスコープはレキシカルスコープで、</p> <ul> <li><p>動的に変化しない。</p> <li><p>子スコープは親スコープの変数を参照できる（逆は不可）。</p> </ul> <p>関数は、</p> <ul> <li><p>呼び出し場所のスコープを継承せず（値の受け渡しは引数で）、</p> <li><p>定義された場所の変数を参照できる（引数と同名の変数は除く）。</p> </ul> <h2 id="グローバルスコープ"><a href="#グローバルスコープ">グローバルスコープ</a></h2> <p>グローバルスコープは最も上位のスコープで、<em>モジュール</em>（後の項で説明）がこれを導入します。</p> <ul> <li><p>モジュール内の変数は特別な場合を除き外部から変更されない</p> </ul> <p>また、REPLなど対話環境下の作業スペースは<code>Main</code>モジュール内なのでグローバルスコープ。</p> <div class=aa ><div class=example-btn >▼</div> <div class=example ><pre><code class="julia hljs"><span class=hljs-keyword >module</span> A
+    a = <span class=hljs-number >2</span>
+    <span class=hljs-keyword >module</span> B
+        b = <span class=hljs-number >3</span>
+    <span class=hljs-keyword >end</span>
+    c = a   <span class=hljs-comment ># 同じスコープ内の値にアクセス</span>
+    d = b   <span class=hljs-comment ># エラー、同じスコープ内のBは参照できるが、その中身は見えない</span>
+    <span class=hljs-keyword >module</span> C
+        e = b   <span class=hljs-comment ># エラー、独立した別のグローバルスコープにはアクセス不可</span>
+        <span class=hljs-keyword >import</span> ..B   <span class=hljs-comment ># モジュールBをこのスコープ内で利用可能にする</span>
+        f = B.b   <span class=hljs-comment ># モジュールB内の変数にアクセス</span>
+        B.b = <span class=hljs-number >5</span>   <span class=hljs-comment ># エラー、別モジュールの変数は変更できない</span>
+    <span class=hljs-keyword >end</span>
+<span class=hljs-keyword >end</span></code></pre></div></div> <h2 id="ローカルスコープ"><a href="#ローカルスコープ">ローカルスコープ</a></h2> <p>プログラム中のほとんどの構造はローカルスコープを導入し、そこで使われる変数は暗黙的にローカル変数とみなされる。<code>local x</code>と明示的にローカル変数であると宣言することもできる。</p> <p>また、ローカルスコープにはハードローカルスコープとソフトローカルスコープの２種があり、挙動が異なります。</p> <p>ローカルスコープ内で変数への代入<code>x &#61; 値</code>があった場合の挙動は以下の通り</p> <ol> <li><p><code>x</code>がローカル変数として宣言されていればそのまま代入</p> <li><p><code>x</code>がローカル変数として宣言されていない場合、代入を行ったのが</p> <ol> <li><p>ハードローカル内なら新たなローカル変数として宣言される</p> <li><p>ソフトローカル内かつ</p> <ol> <li><p><code>x</code>がグローバル変数として定義されていなければ新たなローカル変数として宣言される</p> <li><p><code>x</code>がグローバル変数として定義されており、さらに</p> <ol> <li><p>対話環境ならグローバル変数として代入される</p> <li><p>非対話環境なら警告を表示してローカル変数として宣言される</p> </ol> </ol> </ol> </ol> <div class=aa ><div class=example-btn >▼</div> <div class=example ><pre><code class="julia hljs"><span class=hljs-keyword >let</span>
+    <span class=hljs-comment ># パターン1</span>
+    a = <span class=hljs-number >3</span>
+    <span class=hljs-keyword >let</span>
+        a = <span class=hljs-number >5</span>
+        println(a)   <span class=hljs-comment ># -&gt; 5</span>
+    <span class=hljs-keyword >end</span>
+    println(a)   <span class=hljs-comment ># -&gt; 5</span>
+    <span class=hljs-comment ># パターン2-1</span>
+    <span class=hljs-keyword >let</span>
+        b = <span class=hljs-number >4</span>
+        println(b)   <span class=hljs-comment ># -&gt; 4   # 新たにローカルとして宣言される</span>
+    <span class=hljs-keyword >end</span>
+    println(b)   <span class=hljs-comment ># -&gt; エラー、変数cはこのスコープでは未定義</span>
+<span class=hljs-keyword >end</span>;</code></pre> <p>次の最後の例はコードを文字列から実行するinclude_stringを使っている。これは非対話環境扱いとなる。</p> <pre><code class="julia-repl hljs"><span class=hljs-meta >julia&gt;</span><span class=julia > <span class=hljs-keyword >for</span> i ∈ <span class=hljs-number >1</span>:<span class=hljs-number >3</span>   <span class=hljs-comment ># パターン2-2-1</span>
+           a = i
+           println(a)
+       <span class=hljs-keyword >end</span>
+</span>1
+2
+3
+
+<span class=hljs-meta >julia&gt;</span><span class=julia > println(a)
+</span>ERROR: UndefVarError: a not defined
+
+
+<span class=hljs-meta >julia&gt;</span><span class=julia > b = <span class=hljs-number >1</span>;   <span class=hljs-comment ># パターン2-2-2-1</span>
+</span>
+<span class=hljs-meta >julia&gt;</span><span class=julia > <span class=hljs-keyword >for</span> i ∈ <span class=hljs-number >2</span>:<span class=hljs-number >4</span>
+           b = i
+           println(b)
+       <span class=hljs-keyword >end</span>
+</span>2
+3
+4
+
+<span class=hljs-meta >julia&gt;</span><span class=julia > println(b)
+</span>4
+
+
+<span class=hljs-meta >julia&gt;</span><span class=julia > code = <span class=hljs-string >&quot;&quot;&quot;
+       b = 1
+       for i ∈ 2:4
+           b = i
+           println(b)
+       end
+       println(b)
+       &quot;&quot;&quot;</span>;   <span class=hljs-comment ># パターン2-2-2-2</span>
+</span>
+<span class=hljs-meta >julia&gt;</span><span class=julia > include_string(Main, code)
+</span>┌ Warning: Assignment to `b` in soft scope is ambiguous because a global variable by the same name exists: `b` will be treated as a ne
+w local. Disambiguate by using `local b` to suppress this warning or `global b` to assign to the existing global variable.
+└ @ string:3
+2
+3
+4
+1</code></pre></div></div> <h3 id="letブロック"><a href="#letブロック"><code>Let</code>ブロック</a></h3> <p><code>let</code>キーワードに続けて変数の代入や宣言をすると、<code>let</code>ブロック内でその変数は新しいローカル変数として宣言され、親スコープの変数と同じ名前であっても別物として扱われます。スコープを導入しない<code>begin</code>ブロックの代わりに使うと便利だったりします。</p> <pre><code class="julia hljs">x, y, z = <span class=hljs-number >1</span>, <span class=hljs-number >1</span>, <span class=hljs-number >1</span>
+<span class=hljs-keyword >let</span> x=<span class=hljs-number >2</span>, z
+    println(<span class=hljs-string >&quot;x = <span class=hljs-variable >$x</span>, y = <span class=hljs-variable >$y</span>&quot;</span>)   <span class=hljs-comment ># -&gt; x = 2, y = 1</span>
+    println(z)   <span class=hljs-comment ># エラー、ローカル変数として宣言したが値を入れていない</span>
+<span class=hljs-keyword >end</span></code></pre> <div class=aa ><div class=example-btn >▼</div> <div class=example ><pre><code class="julia hljs">julia&gt; Fs = <span class=hljs-built_in >Vector</span>{<span class=hljs-built_in >Any</span>}(<span class=hljs-literal >undef</span>, <span class=hljs-number >2</span>); i = <span class=hljs-number >1</span>;
+
+julia&gt; <span class=hljs-keyword >while</span> i &lt;= <span class=hljs-number >2</span>
+           Fs[i] = ()-&gt;i
+           <span class=hljs-keyword >global</span> i += <span class=hljs-number >1</span>
+       <span class=hljs-keyword >end</span>
+
+julia&gt; Fs[<span class=hljs-number >1</span>]()
+<span class=hljs-number >3</span>
+
+julia&gt; Fs[<span class=hljs-number >2</span>]()
+<span class=hljs-number >3</span></code></pre> <pre><code class="julia hljs">julia&gt; Fs = <span class=hljs-built_in >Vector</span>{<span class=hljs-built_in >Any</span>}(<span class=hljs-literal >undef</span>, <span class=hljs-number >2</span>); i = <span class=hljs-number >1</span>;
+
+julia&gt; <span class=hljs-keyword >while</span> i &lt;= <span class=hljs-number >2</span>
+           <span class=hljs-keyword >let</span> i = i
+               Fs[i] = ()-&gt;i
+           <span class=hljs-keyword >end</span>
+           <span class=hljs-keyword >global</span> i += <span class=hljs-number >1</span>
+       <span class=hljs-keyword >end</span>
+
+julia&gt; Fs[<span class=hljs-number >1</span>]()
+<span class=hljs-number >1</span>
+
+julia&gt; Fs[<span class=hljs-number >2</span>]()
+<span class=hljs-number >2</span></code></pre></div></div> <h3 id="ループにおけるスコープ"><a href="#ループにおけるスコープ">ループにおけるスコープ</a></h3> <p><code>let</code>ブロックのように、<code>for</code>ループや内包ループ（後の項で説明）は毎回スコープを導入します。<code>for i in 1:3</code>の<code>i</code>のような反復に使われる変数は常に新しいローカル変数となります。しかし、<code>outer</code>キーワードを使えば新しいローカル変数ではなく親スコープの変数に再代入する形でループを回すことができます。 <div class=aa ><div class=example-btn >▼</div> <div class=example ><pre><code class="julia hljs"><span class=hljs-keyword >let</span>
+    i = <span class=hljs-number >0</span>
+    <span class=hljs-keyword >for</span> i ∈ <span class=hljs-number >1</span>:<span class=hljs-number >3</span>
+        <span class=hljs-comment ># 空ループ、i=0への再代入なし</span>
+    <span class=hljs-keyword >end</span>
+    println(i)   <span class=hljs-comment ># -&gt; 0</span>
+    <span class=hljs-keyword >for</span> outer i = <span class=hljs-number >1</span>:<span class=hljs-number >3</span>
+        <span class=hljs-comment ># 空ループ、i=0への再代入あり</span>
+    <span class=hljs-keyword >end</span>
+    println(i)   <span class=hljs-comment ># -&gt; 3</span>
+<span class=hljs-keyword >end</span></code></pre></div></div></p> <h3 id="定数"><a href="#定数">定数</a></h3> <p>変数の中には一度決めた値を様々な場所で使いまわすものもあります。グローバルスコープ直下にある変数が変更を必要としないものなら、積極的に定数として定義しましょう。パフォーマンス向上に寄与します。ローカル変数の場合には<code>const</code>をつけなくともそれが定数かどうかはJuliaがうまく判断してくれます。</p> <pre><code class="julia-repl hljs"><span class=hljs-meta >julia&gt;</span><span class=julia > <span class=hljs-keyword >const</span> <span class=hljs-literal >pi</span> = <span class=hljs-number >3.14159265358979323846</span>;
+</span>
+<span class=hljs-meta >julia&gt;</span><span class=julia > <span class=hljs-keyword >const</span> a, b = <span class=hljs-number >1</span>, <span class=hljs-number >2</span>
+</span>(1, 2)</code></pre> <p><code>const</code>キーワードで定義される定数は再び変数束縛されないというだけで、イミュータブルなオブジェクトではない。例えば配列を定数として定義したとき、別の配列や数値などをそれに再代入することはできないが配列の中身に対する操作は可能である。</p> <p>Special top-level assignments, such as those performed by the function and struct keywords, are constant by default.</p> <p>定数への再代入は特定の条件下では可能である。とはいえ非推奨。</p> <pre><code class="julia hljs"><span class=hljs-comment ># 別の型を代入</span>
+<span class=hljs-keyword >const</span> x = <span class=hljs-number >1.0</span>
+x = <span class=hljs-number >1</span>   <span class=hljs-comment ># エラー</span>
+
+<span class=hljs-comment ># 同じ型を代入</span>
+<span class=hljs-keyword >const</span> y = <span class=hljs-number >1.0</span>
+y = <span class=hljs-number >2.0</span>   <span class=hljs-comment ># 警告は出るがイケる</span>
+
+<span class=hljs-comment ># 同じ型でかつ、結果的に値が変わらない</span>
+<span class=hljs-keyword >const</span> z = <span class=hljs-number >100</span>
+z = <span class=hljs-number >100</span>   <span class=hljs-comment ># OK</span>
+
+<span class=hljs-comment ># ただしミュータブルオブジェクトは値が不変でも警告が出る</span>
+<span class=hljs-keyword >const</span> a = [<span class=hljs-number >1</span>]
+a = [<span class=hljs-number >1</span>]   <span class=hljs-comment ># 警告は出るがイケる</span></code></pre> <div class=page-foot > <div class=copyright > &copy; okshouiti. 最終更新: 2021-01-18. <small>built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a></small>. </div> </div> </div> </div>

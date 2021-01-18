@@ -1,0 +1,214 @@
+<!doctype html> <html lang=ja > <meta charset=UTF-8 > <meta name=viewport  content="width=device-width, initial-scale=1"> <script src="/libs/main.js"></script> <link rel=stylesheet  href="/css/reboot.css"> <link rel=stylesheet  href="/css/main.css"> <link rel=icon  href="/assets/favicon.png"> <title>関数</title> <style> span.name { color: #50b949; font-family: Cica } </style> <div class=sidebar > <div class="container sidebar-sticky"> <div class=sidebar-about > <div class=top >JCS</div> <div class=lead >Julia Cheat Site.</div> </div> <nav class=sidebar-nav > <ul class=menu-list > <li class=menu-parent ><a href="/" class=menu-link >トップ</a> <li class="menu-parent active"><a href="/manual/getting-started/" class=menu-link >マニュアル</a> <ul class=menu-child > <li><a class="" href="/manual/getting-started/">はじめる</a> <li><a class="" href="/manual/variables/">変数</a> <li><a class="" href="/manual/int-and-float/">整数と浮動小数点数</a> <li><a class="" href="/manual/operations/">数理演算と初歩的な関数</a> <li><a class="" href="/manual/complex-and-rational/">複素数と有理数</a> <li><a class="" href="/manual/strings/">文字列</a> <li><a class=active  href="/manual/functions/">関数</a> <li><a class="" href="/manual/control-flow/">制御構造</a> <li><a class="" href="/manual/scope/">スコープ</a> <li><a class="" href="/manual/type/">型</a> </ul> <!-- <li class="menu-parent {{ispage base/*}}active{{end}}"><a href="/base/essentials/" class=menu-link >Base</a> <ul class=menu-child > {{for p in base}} <li><a class="{{ispage {{p}}}}active{{end}}" href="/{{fill p}}/">{{fill title p}}</a> {{end}} </ul> <li class="menu-parent {{ispage omake/*}}active{{end}}"><a href="/omake/Cascadia.jl/" class=menu-link >おまけ</a> <ul class=menu-child > {{for p in omake}} <li><a class="{{ispage {{p}}}}active{{end}}" href="/{{fill p}}/">{{fill title p}}</a> {{end}} </ul> --> </ul> </nav> </div> </div> <div class="content container"> <header> <div class=sidebar-button  onclick="toggle()"> <div class=bar1 ></div> <div class=bar2 ></div> <div class=bar3 ></div> </div> </header> <div class=franklin-content ><h1 id="関数"><a href="#関数">関数</a></h1> <div class=franklin-toc ><ol><li><a href="#関数の基本">関数の基本</a><ol><li><a href="#関数の定義">関数の定義</a><li><a href="#関数の呼び出し">関数の呼び出し</a></ol><li><a href="#returnキーワード">returnキーワード</a><li><a href="#演算子と関数の関係">演算子と関数の関係</a><ol><li><a href="#演算子は関数だ">演算子は関数だ！</a><li><a href="#特殊な名前の演算子">特殊な名前の演算子</a></ol><li><a href="#無名関数">無名関数</a><li><a href="#複数の返値">複数の返値</a><ol><li><a href="#タプル">タプル</a><li><a href="#名前付きタプル">名前付きタプル</a><li><a href="#複数の返値__2">複数の返値</a></ol><li><a href="#argument_destructuring">Argument destructuring</a><li><a href="#可変長引数">可変長引数</a><ol><li><a href="#任意の数の引数をもつ関数">任意の数の引数をもつ関数</a><li><a href="#関数呼び出しにおける引数の展開">関数呼び出しにおける引数の展開</a></ol><li><a href="#オプション引数">オプション引数</a><li><a href="#キーワード引数">キーワード引数</a><li><a href="#argument_passing_behavior">Argument Passing Behavior</a></ol></div> <h2 id="関数の基本"><a href="#関数の基本">関数の基本</a></h2> <p>関数はJuliaの最重要キーワードです。 関数は引数の値を使い定義された処理をして結果の値を返します。</p> <h3 id="関数の定義"><a href="#関数の定義">関数の定義</a></h3> <p>まずは<code>f</code>という名前の関数を</p> <pre><code class="julia hljs"><span class=hljs-keyword >function</span> f(x, y)
+    x + y
+<span class=hljs-keyword >end</span></code></pre> <p>のようにfunctionキーワードを使って定義するか、処理が簡潔な場合は一行で</p> <pre><code class="julia hljs">f(x, y) = x + y</code></pre>
+<p>と定義できます。これは代入方式と呼ばれる関数の定義方法です。処理を一行で書くことが出来なくとも、複合文を使い</p>
+<pre><code class="julia hljs">f(x, y) = <span class=hljs-keyword >begin</span>
+    <span class=hljs-comment ># 複数行にわたって処理を書ける</span>
+    x + y
+<span class=hljs-keyword >end</span></code></pre>
+<p>と書くことも出来ます。</p>
+<p>変数名と同様にUnicodeが使えるので、</p>
+<pre><code class="julia hljs">∑(x, y) = x + y</code></pre>
+<p>のように馴染みのある名前で関数を定義することも可能なうえ、 日本語の名前を使うことも出来ます。うれしいですね！</p>
+<h3 id="関数の呼び出し"><a href="#関数の呼び出し">関数の呼び出し</a></h3>
+<p>定義済の関数は丸括弧を付け（引数がある場合は丸括弧内で指定し）、呼び出すことが出来ます。</p>
+<pre><code class="julia hljs">f(<span class=hljs-number >2</span>, <span class=hljs-number >3</span>)   <span class=hljs-comment ># -&gt; 5</span></code></pre>
+<p>上の通り<code>x&#61;2</code>、<code>y&#61;3</code>で<code>f</code>を呼び出すと上のように5が返されます。 （※以下、呼び出された関数が返す値はコメントにて<code># -&gt; 値</code>のように書くこととします。） 丸括弧を付けない場合は関数オブジェクトを表し、他の値と同じように受け渡しができます。</p>
+<pre><code class="julia hljs">g = f</code></pre>
+<p>とすると<code>g</code>に<code>f</code>が代入され、</p>
+<pre><code class="julia hljs">g(<span class=hljs-number >2</span>, <span class=hljs-number >3</span>)   <span class=hljs-comment ># -&gt; 5</span></code></pre>
+<p>関数<code>f</code>と同じ処理をする関数<code>g</code>ができます。</p>
+<h2 id="returnキーワード"><a href="#returnキーワード">returnキーワード</a></h2>
+<p>関数は最後の計算結果を返します</p>
+<pre><code class="julia hljs"><span class=hljs-keyword >function</span> f(x, y)
+    a = <span class=hljs-number >2</span>x
+    b = y^<span class=hljs-number >2</span>
+    a*b
+    a + b
+<span class=hljs-keyword >end</span>
+
+f(<span class=hljs-number >2</span>, <span class=hljs-number >3</span>)   <span class=hljs-comment ># -&gt; 13</span></code></pre>
+<p>が、<code>return</code>キーワードを使うと、<code>return</code>の直後にある式の結果を返します。</p>
+<pre><code class="julia hljs"><span class=hljs-keyword >function</span> g(x, y)
+    a = <span class=hljs-number >2</span>x
+    b = y^<span class=hljs-number >2</span>
+    <span class=hljs-keyword >return</span> a*b
+    a + b
+<span class=hljs-keyword >end</span>
+
+g(<span class=hljs-number >2</span>, <span class=hljs-number >3</span>)   <span class=hljs-comment ># -&gt; 36</span></code></pre>
+<p>このとき、関数は値を返した時点で処理を終了します。この性質は</p>
+<pre><code class="julia hljs"><span class=hljs-keyword >function</span> hypot(x, y)
+    x = abs(x)
+    y = abs(y)
+    <span class=hljs-keyword >if</span> x &gt; y
+        r = y/x
+        <span class=hljs-keyword >return</span> x*sqrt(<span class=hljs-number >1</span> + r*r)
+    <span class=hljs-keyword >end</span>
+    <span class=hljs-keyword >if</span> y == <span class=hljs-number >0</span>
+        <span class=hljs-keyword >return</span> zero(x)
+    <span class=hljs-keyword >end</span>
+    r = x/y
+    <span class=hljs-keyword >return</span> y*sqrt(<span class=hljs-number >1</span> + r*r)
+<span class=hljs-keyword >end</span>
+
+hypot(<span class=hljs-number >3</span>, <span class=hljs-number >4</span>)   <span class=hljs-comment ># -&gt; 5.0</span></code></pre>
+<p>のように処理が分岐して複数の返値パターンがあるようなケースで有用です。最初の条件<code>x &gt; y</code>が真であれば<code>x*sqrt&#40;1 &#43; r*r&#41;</code>までを計算して終了です。<code>if y &#61;&#61; 0</code>以降は評価されません</p>
+<h2 id="演算子と関数の関係"><a href="#演算子と関数の関係">演算子と関数の関係</a></h2>
+<h3 id="演算子は関数だ"><a href="#演算子は関数だ">演算子は関数だ！</a></h3>
+<p>Juliaの演算子は特殊な記法を持つ関数です。（<code>&amp;&amp;</code>や<code>||</code>のような例外もあります） 従って</p>
+<pre><code class="julia hljs"><span class=hljs-number >1</span> + <span class=hljs-number >2</span> + <span class=hljs-number >3</span>   <span class=hljs-comment ># -&gt; 6</span>
+
++(<span class=hljs-number >1</span>, <span class=hljs-number >2</span>, <span class=hljs-number >3</span>)   <span class=hljs-comment ># -&gt; 6</span></code></pre>
+<p>のように括弧をつけて呼び出す関数スタイルで計算することも出来ます。 前者のような中置記法で演算子を使用した場合、Julia内部では後者のような関数呼び出しが行われています。</p>
+<p>また、関数としての演算子を変数に代入することも可能です。</p>
+<pre><code class="julia hljs">f = +
+
+f(<span class=hljs-number >1</span>, <span class=hljs-number >2</span>, <span class=hljs-number >3</span>)   <span class=hljs-comment ># -&gt; 6</span>
+
+<span class=hljs-number >1</span> f <span class=hljs-number >2</span>   <span class=hljs-comment ># エラー</span></code></pre>
+<p>しかし残念ながら変数に代入されるのは関数であるため、中置記法などの演算子用記法は受け継がれません。</p>
+<h3 id="特殊な名前の演算子"><a href="#特殊な名前の演算子">特殊な名前の演算子</a></h3>
+<p>前項の<code>&#43;</code>は演算子としての名前と関数としての名前が一致していましたが、演算子の中には両者が一致していない場合もあります。下記のような演算子たちです。</p>
+<table><tr><th align=right >記法<th align=right >呼び出される関数<tr><td align=right ><code>&#91;A B C ...&#93;</code><td align=right >hcat<tr><td align=right ><code>&#91;A; B; C; ...&#93;</code><td align=right >vcat<tr><td align=right ><code>&#91;A B; C D; ...&#93;</code><td align=right >hvcat<tr><td align=right ><code>A&#39;</code><td align=right >adjoint<tr><td align=right ><code>A&#91;i&#93;</code><td align=right >getindex<tr><td align=right ><code>A&#91;i&#93; &#61; x</code><td align=right >setindex&#33;<tr><td align=right ><code>A.n</code><td align=right >getproperty<tr><td align=right ><code>A.n &#61; x</code><td align=right >setproperty&#33;</table>
+<h2 id="無名関数"><a href="#無名関数">無名関数</a></h2>
+<p>Juliaの関数は第一級オブジェクトです。変数に代入したり代入された変数から一般的な関数呼び出し構文で呼び出せます。また、関数自体を他の関数の引数や返値として使えます。</p>
+<p>このような用途では関数をその場一度限りで使う事が多々あります。その場合、無名関数が役立ちます。</p>
+<pre><code class="julia hljs">x -&gt; x^<span class=hljs-number >2</span> + <span class=hljs-number >2</span>x - <span class=hljs-number >1</span>
+
+<span class=hljs-keyword >function</span> (x)
+    x^<span class=hljs-number >2</span> + <span class=hljs-number >2</span>x - <span class=hljs-number >1</span>
+<span class=hljs-keyword >end</span></code></pre>
+<p>以上の無名関数は1つの引数<code>x</code>をとり、<code>x^2 &#43; 2x - 1</code>の結果を返します。</p>
+<p>先述の通り、おもに「関数を引数にとる関数」の引数として使われる無名関数は、古くから例として用いられる<code>map</code>関数（配列の各要素に関数を適用しその各結果を要素に持つ新しい配列を返す）を例に取れば、</p>
+<pre><code class="julia hljs">f(x) = x^<span class=hljs-number >2</span> + <span class=hljs-number >2</span>x - <span class=hljs-number >1</span>
+
+map(f, [<span class=hljs-number >1</span>, <span class=hljs-number >3</span>, -<span class=hljs-number >1</span>])   <span class=hljs-comment ># -&gt; [2, 14, -2]</span>
+
+map(x -&gt; x^<span class=hljs-number >2</span> + <span class=hljs-number >2</span>x - <span class=hljs-number >1</span>, [<span class=hljs-number >1</span>, <span class=hljs-number >3</span>, -<span class=hljs-number >1</span>])   <span class=hljs-comment ># -&gt; [2, 14, -2]</span></code></pre>
+<p>のように関数<code>f</code>を定義した場合と同じ処理を無名関数で行えます。無名関数を使えばプログラムの行数を節約出来るだけでなく、関数の名前を考える煩わしさから解放されます！</p>
+<pre><code class="julia hljs">(x, y, z) -&gt; <span class=hljs-number >2</span>x + y - z   <span class=hljs-comment ># 複数の引数はタプルのように丸括弧で囲む</span>
+
+() -&gt; <span class=hljs-number >3</span>   <span class=hljs-comment ># 引数のない無名関数</span></code></pre>
+<p>複数の引数や引数のない無名関数もあります。（引数のない無名関数は遅延評価に使われるようです。）</p>
+<h2 id="複数の返値"><a href="#複数の返値">複数の返値</a></h2>
+<h3 id="タプル"><a href="#タプル">タプル</a></h3>
+<p>Juliaには<code>Tuple</code>（タプル）と呼ばれるデータ構造が組み込まれており、これは関数の引数と返値と密接に関係しています。タプルは複数のデータを格納できる「器」です。配列とは異なり変更不可能です（<a href="https://ja.wikipedia.org/wiki/イミュータブル">イミュータブル</a>）。</p>
+<p>タプルにはあらゆる値を格納でき、添字を使ってi番目の要素を読み出せます。</p>
+<pre><code class="julia hljs">(<span class=hljs-number >1</span>, <span class=hljs-number >1</span>+<span class=hljs-number >1</span>)   <span class=hljs-comment ># -&gt; (1, 2)</span>
+
+(<span class=hljs-number >1</span>,)   <span class=hljs-comment ># -&gt; (1,)</span>
+<span class=hljs-comment ># コンマを付けないとタプルの中の&quot;1&quot;ではなくただの数値”1”扱い</span>
+
+x = (<span class=hljs-number >0.0</span>, <span class=hljs-string >&quot;hello&quot;</span>, <span class=hljs-number >6</span>*<span class=hljs-number >7</span>)
+
+x[<span class=hljs-number >2</span>]   <span class=hljs-comment ># -&gt; &quot;hello&quot;</span>
+<span class=hljs-comment ># 2番目の要素を取得</span></code></pre>
+<p>中身のない丸括弧<code>&#40;&#41;</code>は空のタプルです。</p>
+<h3 id="名前付きタプル"><a href="#名前付きタプル">名前付きタプル</a></h3>
+<p>タプルには<code>NamedTuple</code>（名前付きタプル）と呼ばれる各要素に名前がついているバージョンがあります。添字のほかにドット&#43;名前を使って要素を読み出せます。</p>
+<pre><code class="julia hljs">x = (one=<span class=hljs-number >1</span>, two=<span class=hljs-number >1</span>+<span class=hljs-number >1</span>)
+
+x[<span class=hljs-number >2</span>]   <span class=hljs-comment ># -&gt; 2</span>
+
+x.two   <span class=hljs-comment ># -&gt; 2</span></code></pre>
+<h3 id="複数の返値__2"><a href="#複数の返値__2">複数の返値</a></h3>
+<p>Juliaの関数は複数の値を1つのタプルで返します。それぞれの値はコンマで区切り、タプルのような丸括弧は省略可能です。</p>
+<pre><code class="julia hljs"><span class=hljs-keyword >function</span> foo(a, b)
+    a+b, a*b
+<span class=hljs-keyword >end</span>
+
+foo(<span class=hljs-number >2</span>, <span class=hljs-number >3</span>)   <span class=hljs-comment ># -&gt; (5, 6)</span></code></pre>
+<p>関数が返したタプルは簡単に分解できます</p>
+<pre><code class="julia hljs">x, y = foo(<span class=hljs-number >2</span>, <span class=hljs-number >3</span>)
+
+x   <span class=hljs-comment ># -&gt; 5</span>
+
+y   <span class=hljs-comment ># -&gt; 6</span></code></pre>
+<h2 id=argument_destructuring ><a href="#argument_destructuring">Argument destructuring</a></h2>
+<p>The destructuring feature can also be used within a function argument. If a function argument name is written as a tuple &#40;e.g. &#40;x, y&#41;&#41; instead of just a symbol, then an assignment &#40;x, y&#41; &#61; argument will be inserted for you:</p>
+<pre><code class="julia hljs">minmax(x, y) = (y &lt; x) ? (y, x) : (x, y)
+
+range((min, max)) = max - min
+
+range(minmax(<span class=hljs-number >10</span>, <span class=hljs-number >2</span>))   <span class=hljs-comment ># -&gt; 8</span></code></pre>
+<p>Notice the extra set of parentheses in the definition of range. Without those, range would be a two-argument function, and this example would not work.</p>
+<h2 id="可変長引数"><a href="#可変長引数">可変長引数</a></h2>
+<h3 id="任意の数の引数をもつ関数"><a href="#任意の数の引数をもつ関数">任意の数の引数をもつ関数</a></h3>
+<p>任意の数の引数をとる関数も定義できます。このような関数は可変長引数（varargs）関数と呼ばれます。引数の後ろに<code>...</code>（ドット3つ）をつけるとその引数は可変長引数になります。</p>
+<pre><code class="julia hljs">f(args...) = args
+
+f(<span class=hljs-number >1</span>, <span class=hljs-number >2</span>, <span class=hljs-number >3</span>)   <span class=hljs-comment ># -&gt; (1, 2, 3)</span>
+
+f()   <span class=hljs-comment ># -&gt; ()</span></code></pre>
+<p>これは最もシンプルな例です。複数の引数が<code>args</code>に束縛され、<code>args</code>は関数内でタプルとして扱われます（引数が一つも無い場合は空のタプルが返ってくる）。</p>
+<pre><code class="julia hljs">bar(a, b, x...) = (a, b, x)
+
+bar(<span class=hljs-number >1</span>,<span class=hljs-number >2</span>)   <span class=hljs-comment ># -&gt; (1, 2, ())</span>
+
+bar(<span class=hljs-number >1</span>,<span class=hljs-number >2</span>,<span class=hljs-number >3</span>)   <span class=hljs-comment ># -&gt; (1, 2, (3,))</span>
+
+bar(<span class=hljs-number >1</span>,<span class=hljs-number >2</span>,<span class=hljs-number >3</span>,<span class=hljs-number >4</span>,<span class=hljs-number >5</span>,<span class=hljs-number >6</span>)   <span class=hljs-comment ># -&gt; (1, 2, (3, 4, 5, 6))</span></code></pre>
+<p>こちらでは引数の最初の2つは<code>a</code>と<code>b</code>に束縛され、残りすべてが<code>x</code>に束縛されます。<code>x</code>には任意の数の引数が束縛されますが、<code>a</code>と<code>b</code>には1つの値が束縛されるため<code>bar</code>は最少で2つの引数をとる関数となります。</p>
+<p>可変長引数で、引数の数を指定することも出来ます。この詳細はメソッドセクションの「制約付き可変長引数」にて説明します。</p>
+<h3 id="関数呼び出しにおける引数の展開"><a href="#関数呼び出しにおける引数の展開">関数呼び出しにおける引数の展開</a></h3>
+<p>可変長引数関数を定義する場合とは逆に、関数を<strong>呼び出す</strong>際にタプルの後ろにsplat演算子<code>...</code>を付けるとタプルの各要素を関数に引数として渡すことが出来る。</p>
+<pre><code class="julia hljs">x = (<span class=hljs-number >3</span>, <span class=hljs-number >4</span>)
+
+f(<span class=hljs-number >1</span>, <span class=hljs-number >2</span>, x)   <span class=hljs-comment ># -&gt; (1, 2, (3, 4))</span>
+
+f(<span class=hljs-number >1</span>, <span class=hljs-number >2</span>, x...)   <span class=hljs-comment ># -&gt; (1, 2, 3, 4)</span></code></pre>
+<p>前者は<code>x</code>を<code>...</code>で展開していないので（数値,数値,タプル）の3つの引数を関数が受け取っていますが、後者は展開したので4つの数値を渡した（<code>f&#40;1, 2, 3, 4&#41;</code>）場合と同じです。</p>
+<pre><code class="julia hljs">x = [<span class=hljs-number >3</span>, <span class=hljs-number >4</span>]
+
+bar(<span class=hljs-number >1</span>, <span class=hljs-number >2</span>, x...)   <span class=hljs-comment ># -&gt; (1, 2, (3, 4))</span>
+
+baz(a, b) = a + b
+
+baz(x...)   <span class=hljs-comment ># -&gt; 7</span>
+
+baz(<span class=hljs-number >1</span>, <span class=hljs-number >2</span>, x...)   <span class=hljs-comment ># エラー</span></code></pre>
+<p>以上のように、splat演算子はタプルでなくてもイテラブル（後の項で登場）な引数なら展開でき、可変長引数関数でなくても使えます。ただし、通常の関数で使う場合は引数の数に注意が必要です（2引数関数に3つ以上の引数を渡すなど）。</p>
+<h2 id="オプション引数"><a href="#オプション引数">オプション引数</a></h2>
+<p>関数には同じ値ばかりが使われる引数があり、そのような引数に毎回値を渡すのは面倒です。そんなときにはオプション引数が有用です。</p>
+<p>組み込み関数<code>join</code>を例にとってみましょう。この関数は複数の文字列<code>strings</code>を<code>delim</code>で区切って結合します。</p>
+<pre><code class="julia hljs"><span class=hljs-keyword >function</span> join(strings, delim=<span class=hljs-string >&quot;&quot;</span>)
+    <span class=hljs-comment ># 中身は略</span>
+<span class=hljs-keyword >end</span></code></pre>
+<p>このように”引数&#61;デフォルト値”と書きます。オプション引数は省略可能で、省略した場合はデフォルト値が使われます。<code>join</code>はデフォルトの区切り文字が<code>&quot;&quot;</code>（空の文字列）になっているので、delimを省略した場合は区切らずに結合することになります。</p>
+<pre><code class="julia hljs">strs = (<span class=hljs-string >&quot;Julia&quot;</span>, <span class=hljs-string >&quot;is&quot;</span>, <span class=hljs-string >&quot;a&quot;</span>, <span class=hljs-string >&quot;programming&quot;</span>, <span class=hljs-string >&quot;language.&quot;</span>)
+
+join(strs, <span class=hljs-string >&quot; &quot;</span>)   <span class=hljs-comment ># -&gt; &quot;Julia is a programming language.&quot;</span>
+
+join(strs, <span class=hljs-string >&quot;,&quot;</span>)   <span class=hljs-comment ># -&gt; &quot;Julia,is,a,programming,language.&quot;</span>
+
+join(strs)   <span class=hljs-comment ># -&gt; &quot;Juliaisaprogramminglanguage.&quot;</span></code></pre>
+<h2 id="キーワード引数"><a href="#キーワード引数">キーワード引数</a></h2>
+<p>従来の関数では、「関数を呼び出すときに渡したｎ番目の値」が「関数のｎ番目の引数」に拘束されます。しかし規模の大きな1つの関数を定義する場合、往々にして引数の多さが厄介になってきます。関数を呼び出すときに「ｎ番目の引数は何に使われる値だったかな？」といった混乱が生じる事も少なくありません。キーワード引数はこのような問題を解消してくれます。</p>
+<p>Plots.jlパッケージの<code>plot</code>関数を例に見てみましょう。この関数はプロットされる線のスタイル・幅・色などを設定する多くのオプションを持っています。<code>width</code>と<code>color</code>のみを指定して呼び出す場合、下記のようになります。</p>
+<pre><code class="julia hljs"><span class=hljs-keyword >function</span> plot(x, y; style=<span class=hljs-string >&quot;solid&quot;</span>, width=<span class=hljs-number >1</span>, color=<span class=hljs-string >&quot;black&quot;</span>)
+    <span class=hljs-comment ># 略</span>
+<span class=hljs-keyword >end</span>
+
+x = <span class=hljs-comment >#plot可能な値</span>
+y = <span class=hljs-comment >#plot可能な値</span>
+
+plot(x, y, width=<span class=hljs-number >2</span>, color=<span class=hljs-string >&quot;red&quot;</span>)
+
+plot(x, y; color=<span class=hljs-string >&quot;red&quot;</span>, width=<span class=hljs-number >2</span>)</code></pre>
+<p>キーワード引数を持つ関数を定義するときはセミコロンで区切る必要がありますが、呼び出すときはコンマも使うことが出来ます。また、順番も自由に入れ替えることが出来ます（※通常の引数は順番通り）。</p>
+<h2 id=argument_passing_behavior ><a href="#argument_passing_behavior">Argument Passing Behavior</a></h2>
+<p>Julia function arguments follow a convention sometimes called &quot;pass-by-sharing&quot;, which means that values are not copied when they are passed to functions. Function arguments themselves act as new variable bindings &#40;new locations that can refer to values&#41;, but the values they refer to are identical to the passed values. Modifications to mutable values &#40;such as Arrays&#41; made within a function will be visible to the caller. This is the same behavior found in Scheme, most Lisps, Python, Ruby and Perl, among other dynamic languages.</p>
+<pre><code class="julia hljs"><span class=hljs-keyword >function</span> g(x, y)::<span class=hljs-built_in >Int8</span>
+    <span class=hljs-keyword >return</span> x * y
+<span class=hljs-keyword >end</span>;
+
+typeof(g(<span class=hljs-number >1</span>, <span class=hljs-number >2</span>))   <span class=hljs-comment ># -&gt; Int8</span></code></pre>
+<p>のように関数のあとに<code>::Type</code>を付けると指定した型で値を返します。Type Declarationsを参照。</p>
+<div class=page-foot >
+  <div class=copyright >
+    &copy; okshouiti. 最終更新: 2021-01-18. <small>built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a></small>.
+  </div>
+</div>
+</div>
+    </div>

@@ -1,0 +1,48 @@
+<!doctype html> <html lang=ja > <meta charset=UTF-8 > <meta name=viewport  content="width=device-width, initial-scale=1"> <script src="/libs/main.js"></script> <link rel=stylesheet  href="/css/reboot.css"> <link rel=stylesheet  href="/css/main.css"> <link rel=icon  href="/assets/favicon.png"> <title>変数</title> <style> span.name { color: #50b949; font-family: Cica } </style> <div class=sidebar > <div class="container sidebar-sticky"> <div class=sidebar-about > <div class=top >JCS</div> <div class=lead >Julia Cheat Site.</div> </div> <nav class=sidebar-nav > <ul class=menu-list > <li class=menu-parent ><a href="/" class=menu-link >トップ</a> <li class="menu-parent active"><a href="/manual/getting-started/" class=menu-link >マニュアル</a> <ul class=menu-child > <li><a class="" href="/manual/getting-started/">はじめる</a> <li><a class=active  href="/manual/variables/">変数</a> <li><a class="" href="/manual/int-and-float/">整数と浮動小数点数</a> <li><a class="" href="/manual/operations/">数理演算と初歩的な関数</a> <li><a class="" href="/manual/complex-and-rational/">複素数と有理数</a> <li><a class="" href="/manual/strings/">文字列</a> <li><a class="" href="/manual/functions/">関数</a> <li><a class="" href="/manual/control-flow/">制御構造</a> <li><a class="" href="/manual/scope/">スコープ</a> <li><a class="" href="/manual/type/">型</a> </ul> <!-- <li class="menu-parent {{ispage base/*}}active{{end}}"><a href="/base/essentials/" class=menu-link >Base</a> <ul class=menu-child > {{for p in base}} <li><a class="{{ispage {{p}}}}active{{end}}" href="/{{fill p}}/">{{fill title p}}</a> {{end}} </ul> <li class="menu-parent {{ispage omake/*}}active{{end}}"><a href="/omake/Cascadia.jl/" class=menu-link >おまけ</a> <ul class=menu-child > {{for p in omake}} <li><a class="{{ispage {{p}}}}active{{end}}" href="/{{fill p}}/">{{fill title p}}</a> {{end}} </ul> --> </ul> </nav> </div> </div> <div class="content container"> <header> <div class=sidebar-button  onclick="toggle()"> <div class=bar1 ></div> <div class=bar2 ></div> <div class=bar3 ></div> </div> </header> <div class=franklin-content ><h1 id="変数"><a href="#変数">変数</a></h1> <div class=franklin-toc ><ol><li><a href="#変数の基礎">変数の基礎</a><li><a href="#使用可能な変数名">使用可能な変数名</a><li><a href="#命名慣習">命名慣習</a></ol></div> <h2 id="変数の基礎"><a href="#変数の基礎">変数の基礎</a></h2> <p>Juliaにおいて、変数とはある値に紐付けた（<a href="https://ja.wikipedia.org/wiki/自由変数と束縛変数">束縛</a>された）名前です。様々な値に名前をつけて管理しておくと後で利用しやすくなります。</p> <pre><code class="julia hljs"><span class=hljs-comment ># 代入式の基本</span>
+x = <span class=hljs-number >10</span>
+
+<span class=hljs-comment ># 変数xを利用した計算</span>
+x + <span class=hljs-number >1</span>   <span class=hljs-comment ># -&gt; 11</span>
+
+<span class=hljs-comment ># xに値を再び代入</span>
+x = <span class=hljs-number >1</span> + <span class=hljs-number >1</span>
+
+x + <span class=hljs-number >1</span>   <span class=hljs-comment ># -&gt; 3</span>
+
+<span class=hljs-comment >#  複数の変数に同時に代入</span>
+m, n = <span class=hljs-number >4</span>, <span class=hljs-number >5</span>
+
+<span class=hljs-comment ># 文字列のような数値以外の値も代入できます</span>
+x = <span class=hljs-string >&quot;Hello World!&quot;</span></code></pre> <p>Juliaでは多様な変数名を使うことができます。変数は大文字と小文字が区別され（<code>aa</code>と<code>Aa</code>は異なる変数）、その名前自体は意味を持ちません。</p> <pre><code class="julia hljs">x = <span class=hljs-number >1.0</span>
+
+y = -<span class=hljs-number >3</span>
+
+Z = <span class=hljs-string >&quot;My string&quot;</span>
+
+customary_phrase = <span class=hljs-string >&quot;Hello world!&quot;</span>
+
+UniversalDeclarationOfHumanRightsStart = <span class=hljs-string >&quot;人人生而自由，在尊严和权利上一律平等。&quot;</span></code></pre> <p>Unicode&#40;UTF-8&#41;の文字が使えます（もちろん日本語も！）。</p> <pre><code class="julia hljs">δ = <span class=hljs-number >0.00001</span>
+
+안녕하세요 = <span class=hljs-string >&quot;Hello&quot;</span>
+
+いちにち = <span class=hljs-string >&quot;1440分&quot;</span></code></pre> <p>juliaのREPLやその他いくつかの開発環境では、バックスラッシュ・LaTeXコマンド・tabキーを組み合わせて記号を入力できます。例えばδという記号を入力したいとき、<code>\delta</code>と入力し<code>tab</code>キーを押せばδが現れます。（日本語からの変換でも入力できます）。記号の名前やコマンドが分からない場合はREPLで?と入力しhelpモードに入ってから記号を貼り付けてEnterするとコマンドを教えてくれます。</p> <pre><code class="julia-repl hljs"><span class=hljs-meta >julia&gt;</span><span class=julia > ?
+</span>
+help?&gt; δ
+&quot;δ&quot; can be typed by \delta(tab)</code></pre> <p>Juliaによって定義済みの定数や関数を定義し直したりすることも可能です。（しかし混乱を生みやすいので、これらの再定義はしないほうがよいでしょう）</p> <pre><code class="julia hljs"><span class=hljs-comment ># 定義済み変数のπ</span>
+<span class=hljs-literal >π</span>   <span class=hljs-comment ># -&gt; 3.1415926535897...</span>
+
+<span class=hljs-literal >π</span> = <span class=hljs-number >3</span>
+
+<span class=hljs-number >2</span><span class=hljs-literal >π</span>   <span class=hljs-comment ># -&gt; 6</span>
+
+sqrt = <span class=hljs-number >4</span></code></pre> <p>再定義する前にその定数や関数を一度でも使っていたらJuliaはエラーを吐きます。再定義はこれらの定数を使う前に行いましょう。</p> <pre><code class="julia hljs"><span class=hljs-number >2</span><span class=hljs-literal >π</span>   <span class=hljs-comment ># -&gt; 6.283185307179586</span>
+
+<span class=hljs-literal >π</span> = <span class=hljs-number >3</span>   <span class=hljs-comment ># -&gt; ERROR: cannot assign variable MathConstants.pi from module Main</span>
+
+sqrt(<span class=hljs-number >100</span>)   <span class=hljs-comment ># -&gt; 10.0</span>
+
+sqrt = <span class=hljs-number >4</span>   <span class=hljs-comment ># -&gt; ERROR: cannot assign variable Base.sqrt from module Main</span></code></pre> <h2 id="使用可能な変数名"><a href="#使用可能な変数名">使用可能な変数名</a></h2> <p>変数名は文字に分類される文字やアンダースコアなどで始まらなければなりません。数字から始めた場合例えば<code>3x</code>は<code>3*x</code>と解釈され、これは<code>3</code>と<code>x</code>の積です。</p> <p>詳しくはUnicodeコードポイントが00A0より大きい記号、例えば</p> <ul> <li><p>Lu/Ll/Lt/Lm/Lo/Nl &quot;文字&quot;</p> <li><p>Sc/So &quot;通貨およびその他のシンボル&quot;</p> <li><p>数学記号などの&quot;文字のような&quot;記号</p> </ul> <p>などが変数名の先頭に使えます。</p> <p>先頭以外では</p> <ul> <li><p>Nd/No - &quot;数&quot;</p> <li><p>Pc - &quot;句読点&quot;</p> </ul> <p>等を含む多くの記号が使えます。</p> <p><code>&#43;</code>のような演算子も Operators like &#43; are also valid identifiers, but are parsed specially. In some contexts, operators can be used just like variables; for example &#40;&#43;&#41; refers to the addition function, and &#40;&#43;&#41; &#61; f will reassign it. Most of the Unicode infix operators &#40;in category Sm&#41;, such as ⊕, are parsed as infix operators and are available for user-defined methods &#40;e.g. you can use const ⊗ &#61; kron to define ⊗ as an infix Kronecker product&#41;. Operators can also be suffixed with modifying marks, primes, and sub/superscripts, e.g. &#43;̂ₐ″ is parsed as an infix operator with the same precedence as &#43;.</p> <p>The only explicitly disallowed names for variables are the names of built-in statements:</p> <pre><code class="julia-repl hljs"><span class=hljs-meta >julia&gt;</span><span class=julia > <span class=hljs-keyword >else</span> = <span class=hljs-literal >false</span>
+</span>ERROR: syntax: unexpected &quot;else&quot;
+
+<span class=hljs-meta >julia&gt;</span><span class=julia > <span class=hljs-keyword >try</span> = <span class=hljs-string >&quot;No&quot;</span>
+</span>ERROR: syntax: unexpected &quot;=&quot;</code></pre> <p>Some Unicode characters are considered to be equivalent in identifiers. Different ways of entering Unicode combining characters &#40;e.g., accents&#41; are treated as equivalent &#40;specifically, Julia identifiers are NFC-normalized&#41;. The Unicode characters ɛ &#40;U&#43;025B: Latin small letter open e&#41; and µ &#40;U&#43;00B5: micro sign&#41; are treated as equivalent to the corresponding Greek letters, because the former are easily accessible via some input methods.</p> <h2 id="命名慣習"><a href="#命名慣習">命名慣習</a></h2> <p>Juliaは使用可能な名前にもいくつか制限を設けており、以下の慣習に沿って書きやすくなっています。</p> <ul> <li><p>変数名は小文字</p> <li><p>アンダースコア&#40;<code>_</code>&#41;で複数語からなる変数名の各単語を区切る。ただし、区切らないと読みづらい場合を除き極力使わない</p> <li><p>型とモジュールの名前は大文字で始め、区切り文字を使わず各単語の先頭を大文字とすることで識別する</p> <li><p>関数とマクロの名前は小文字でアンダースコアを使わない</p> <li><p>自身の引数に値を上書きする関数は最後に<code>&#33;</code>をつける</p> </ul> <p>命名慣習およびその他「書き方」については<a href=aaa >スタイルガイド</a>にて詳しく触れます。</p> <div class=page-foot > <div class=copyright > &copy; okshouiti. 最終更新: 2021-01-18. <small>built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a></small>. </div> </div> </div> </div>

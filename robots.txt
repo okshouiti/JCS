@@ -1,0 +1,4 @@
+Sitemap: https://jcs.okshouiti.com/sitemap.xml
+
+User-agent: *
+Disallow:

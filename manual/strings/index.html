@@ -1,0 +1,85 @@
+<!doctype html> <html lang=ja > <meta charset=UTF-8 > <meta name=viewport  content="width=device-width, initial-scale=1"> <script src="/libs/main.js"></script> <link rel=stylesheet  href="/css/reboot.css"> <link rel=stylesheet  href="/css/main.css"> <link rel=icon  href="/assets/favicon.png"> <title>文字列</title> <style> span.name { color: #50b949; font-family: Cica } </style> <div class=sidebar > <div class="container sidebar-sticky"> <div class=sidebar-about > <div class=top >JCS</div> <div class=lead >Julia Cheat Site.</div> </div> <nav class=sidebar-nav > <ul class=menu-list > <li class=menu-parent ><a href="/" class=menu-link >トップ</a> <li class="menu-parent active"><a href="/manual/getting-started/" class=menu-link >マニュアル</a> <ul class=menu-child > <li><a class="" href="/manual/getting-started/">はじめる</a> <li><a class="" href="/manual/variables/">変数</a> <li><a class="" href="/manual/int-and-float/">整数と浮動小数点数</a> <li><a class="" href="/manual/operations/">数理演算と初歩的な関数</a> <li><a class="" href="/manual/complex-and-rational/">複素数と有理数</a> <li><a class=active  href="/manual/strings/">文字列</a> <li><a class="" href="/manual/functions/">関数</a> <li><a class="" href="/manual/control-flow/">制御構造</a> <li><a class="" href="/manual/scope/">スコープ</a> <li><a class="" href="/manual/type/">型</a> </ul> <!-- <li class="menu-parent {{ispage base/*}}active{{end}}"><a href="/base/essentials/" class=menu-link >Base</a> <ul class=menu-child > {{for p in base}} <li><a class="{{ispage {{p}}}}active{{end}}" href="/{{fill p}}/">{{fill title p}}</a> {{end}} </ul> <li class="menu-parent {{ispage omake/*}}active{{end}}"><a href="/omake/Cascadia.jl/" class=menu-link >おまけ</a> <ul class=menu-child > {{for p in omake}} <li><a class="{{ispage {{p}}}}active{{end}}" href="/{{fill p}}/">{{fill title p}}</a> {{end}} </ul> --> </ul> </nav> </div> </div> <div class="content container"> <header> <div class=sidebar-button  onclick="toggle()"> <div class=bar1 ></div> <div class=bar2 ></div> <div class=bar3 ></div> </div> </header> <div class=franklin-content ><h1 id="文字列"><a href="#文字列">文字列</a></h1> <div class=franklin-toc ><ol><li><a href="#概要">概要</a><li><a href="#文字と文字列について">文字と文字列について</a><li><a href="#文字-character">文字-Character</a><li><a href="#文字列-string">文字列-String</a><ol><li><a href="#文字列の基礎">文字列の基礎</a><li><a href="#文字列の結合">文字列の結合</a><li><a href="#文字列補完">文字列補完</a><li><a href="#三重クオート文字リテラル">三重クオート文字リテラル</a></ol><li><a href="#演算">演算</a><li><a href="#そのほかの文字列リテラル">そのほかの文字列リテラル</a><ol><li><a href="#正規表現">正規表現</a></ol></ol></div> <h2 id="概要"><a href="#概要">概要</a></h2> <pre><code class="julia hljs"><span class=hljs-comment ># 文字列の生成</span>
+str = <span class=hljs-string >&quot;Hello, world.&quot;</span>
+<span class=hljs-comment ># アクセス</span>
+str[<span class=hljs-number >2</span>]   <span class=hljs-comment >#-&gt; &#x27;e&#x27;</span>
+<span class=hljs-comment ># アクセス(範囲)</span>
+str[<span class=hljs-number >1</span>:<span class=hljs-number >5</span>]   <span class=hljs-comment >#-&gt; &quot;Hello&quot;</span>
+<span class=hljs-comment ># 結合</span>
+<span class=hljs-string >&quot;I&#x27;m &quot;</span> * <span class=hljs-string >&quot;fine.&quot;</span>   <span class=hljs-comment >#-&gt; &quot;I&#x27;m fine.&quot;</span>
+<span class=hljs-comment ># 補完</span>
+whom = <span class=hljs-string >&quot;Japan.&quot;</span>
+<span class=hljs-string >&quot;Hello, <span class=hljs-variable >$whom</span>&quot;</span>   <span class=hljs-comment >#-&gt; &quot;Hello, Japan.&quot;</span></code></pre> <h2 id="文字と文字列について"><a href="#文字と文字列について">文字と文字列について</a></h2> <p>Juliaにおいて「文字」は1つの文字、「文字列」は任意の数の文字からなる文字の集まりです。例えば、<code>a</code>や<code>楽</code>は文字、<code>minute</code>や<code>携帯電話</code>は文字列にあたります。任意の数の文字なので一文字でも構いませんし、ゼロ文字も文字列に含まれます。</p> <ul> <li><p>文字列の具象型は<code>String</code>です。さまざまな文字種が使える（UTF-8エンコードのUnicodeの全範囲）。</p> <li><p>bbb</p> </ul> <h2 id="文字-character"><a href="#文字-character">文字-Character</a></h2> <p>前述の通り、Juliaにおいて文字は1つの文字からなる値で<code>&#39;a&#39;</code>のように<code>&#39;</code>シングルクオートで囲んで表現します。 あ</p> <h2 id="文字列-string"><a href="#文字列-string">文字列-String</a></h2> <h3 id="文字列の基礎"><a href="#文字列の基礎">文字列の基礎</a></h3> <p>文字列は<code>&quot;</code>（ダブルクオート）で囲みます。文字列がダブルクオートを含む場合は３つのダブルクオートで囲むか、<code>\&quot;</code>のようにバックスラッシュでエスケープしてください。</p> <pre><code class="julia hljs">str = <span class=hljs-string >&quot;Hello, world.&quot;</span>
+
+str2 = <span class=hljs-string >&quot;&quot;&quot;Contains &quot;quote&quot; characters&quot;&quot;&quot;</span>
+
+<span class=hljs-comment >#同上</span>
+str3 = <span class=hljs-string >&quot;Contains \&quot;quote\&quot; characters&quot;</span></code></pre> <p>文字列が代入された変数<code>str</code>の3番目の文字を抜き出したい場合は<code>str&#91;3&#93;</code>のように書きます。このとき、結果は文字列ではなく文字です。最初および最後の文字にはそれぞれ<code>begin</code>&#40;Julia1.4以降&#41;、<code>end</code>でアクセスでき、これらは数字と組み合わせることもできます。</p> <pre><code class="julia hljs">str[<span class=hljs-number >3</span>]   <span class=hljs-comment >#-&gt; &#x27;l&#x27;</span>
+
+<span class=hljs-comment ># (Julia1.4以降はstr[begin]と書ける)</span>
+str[<span class=hljs-number >1</span>]   <span class=hljs-comment >#-&gt; &#x27;H&#x27;</span>
+
+str[<span class=hljs-keyword >end</span>]   <span class=hljs-comment >#-&gt; &#x27;.&#x27;</span>
+
+str[<span class=hljs-keyword >end</span>-<span class=hljs-number >3</span>]   <span class=hljs-comment >#-&gt; &#x27;r&#x27;</span>
+
+str[end÷<span class=hljs-number >2</span>]   <span class=hljs-comment >#-&gt; &#x27;,&#x27;</span></code></pre> <p><code>str&#91;4:9&#93;</code>のように範囲で指定すると文字列から文字列を抜き出せます。範囲で指定した場合は抜き出す文字列が１文字の場合でも<code>Char</code>ではなく<code>String</code>になります。</p> <pre><code class="julia hljs">str[<span class=hljs-number >4</span>:<span class=hljs-number >9</span>]   <span class=hljs-comment >#-&gt; &quot;lo, Wo&quot;</span>
+
+str[<span class=hljs-keyword >end</span>-<span class=hljs-number >5</span>:<span class=hljs-keyword >end</span>]   <span class=hljs-comment >#-&gt; &quot;World.&quot;</span>
+
+str[<span class=hljs-number >2</span>]   <span class=hljs-comment >#-&gt; &#x27;e&#x27;</span>
+
+str[<span class=hljs-number >2</span>:<span class=hljs-number >2</span>]   <span class=hljs-comment >#-&gt; &quot;e&quot;</span></code></pre> <p>範囲指定はもとの文字列の一部を複製しますが、このような抜き出しは<code>SubString</code>型でも出来ます。</p> <pre><code class="julia hljs">substr = <span class=hljs-built_in >SubString</span>(str, <span class=hljs-number >1</span>, <span class=hljs-number >5</span>)   <span class=hljs-comment >#-&gt; &quot;Hello&quot;</span>
+
+typeof(substr)   <span class=hljs-comment >#-&gt; SubString{String}</span></code></pre> <h3 id="文字列の結合"><a href="#文字列の結合">文字列の結合</a></h3> <p>文字列に対してよく使われる演算は結合です。文字列の結合は<code>string</code>関数か<code>*</code>&#40;アスタリスク&#41;演算子で可能です。<code>&#43;</code>ではなく<code>*</code>です。</p> <pre><code class="julia hljs">greet = <span class=hljs-string >&quot;Hello&quot;</span>
+whom = <span class=hljs-string >&quot;world&quot;</span>
+
+string(greet, <span class=hljs-string >&quot;-&quot;</span>, whom)   <span class=hljs-comment >#-&gt; &quot;Hello-world&quot;</span>
+
+greet * <span class=hljs-string >&quot;_&quot;</span> * whom   <span class=hljs-comment >#-&gt; &quot;Hello_world&quot;</span></code></pre> <h3 id="文字列補完"><a href="#文字列補完">文字列補完</a></h3> <p>上記のような文字列結合よりも直感的に扱える文字列補完も便利です。文字列リテラル中に<code>&#36;</code>を先頭に付けた変数を置くことでその変数の値を文字列中に埋め込みます。</p> <pre><code class="julia hljs"><span class=hljs-string >&quot;<span class=hljs-variable >$greet</span>, <span class=hljs-variable >$whom</span>.&quot;</span>   <span class=hljs-comment >#-&gt; &quot;Hello, world.&quot;</span>
+
+<span class=hljs-comment ># Julia内部ではstring関数呼び出しに変換されています。</span>
+<span class=hljs-comment ># 同じ処理ですが可読性に差がありますね。</span>
+string(greet, <span class=hljs-string >&quot;, &quot;</span>, whom, <span class=hljs-string >&quot;.&quot;</span>)   <span class=hljs-comment >#-&gt; &quot;Hello, world.&quot;</span>
+
+<span class=hljs-string >&quot;\$greet, \$whom.&quot;</span></code></pre> <p><code>&#36;</code>のあとに括弧で囲んだ式を記述すると、その結果の値が文字列中に埋め込まれます。簡単な処理であれば変数を使わずに文字列リテラル内で直接処理してしまった方がいいでしょう。</p> <pre><code class="julia hljs"><span class=hljs-string >&quot;1 + 2 = <span class=hljs-subst >$(<span class=hljs-number >1</span> + <span class=hljs-number >2</span>)</span>&quot;</span>   <span class=hljs-comment >#-&gt; &quot;1 + 2 = 3&quot;</span>
+
+<span class=hljs-comment ># 簡単な処理なら結果を変数に代入せずに</span>
+<span class=hljs-comment ># 文字列リテラル内で処理してしまった方が良いでしょう。</span>
+myfunc(x) = x + <span class=hljs-number >4</span>
+answer = myfunc(<span class=hljs-number >5</span>)
+
+<span class=hljs-string >&quot;ans: <span class=hljs-variable >$answer</span>&quot;</span>   <span class=hljs-comment >#-&gt; &quot;ans: 9&quot;</span>
+
+<span class=hljs-string >&quot;ans: <span class=hljs-subst >$(myfunc(<span class=hljs-number >5</span>)</span>)&quot;</span>   <span class=hljs-comment >#-&gt; &quot;ans: 9&quot;</span></code></pre> <p>例の<code>&#36;&#40;1 &#43; 2&#41;</code>が数値を処理していることからも分かりますが、文字列結合および補完は両者とも文字列以外のオブジェクトを扱えます。これらは文字列へと変換されますが、その際リテラル式として記述される形式に近い形に変換されます。</p> <pre><code class="julia hljs">v = [<span class=hljs-number >1</span>,<span class=hljs-number >2</span>,<span class=hljs-number >3</span>]
+
+<span class=hljs-string >&quot;v: <span class=hljs-variable >$v</span>&quot;</span>   <span class=hljs-comment >#-&gt; &quot;v: [1, 2, 3]&quot;</span></code></pre> <p><code>AbstractString</code>はもちろん<code>AbstractChar</code>は文字列の構成部品であるため、変換なしで直接埋め込まれます。</p> <p><code>&quot;</code>と同様に、文字列が<code>&#36;</code>を含む場合は<code>\&#36;</code>とエスケープします。下記はREPL上でこのような文字列を<code>print</code>した例です。</p> <pre><code class="julia-repl hljs"><span class=hljs-meta >julia&gt;</span><span class=julia > print(<span class=hljs-string >&quot;I have \$100 in my account.&quot;</span>)
+</span>I have $100 in my account.</code></pre> <h3 id="三重クオート文字リテラル"><a href="#三重クオート文字リテラル">三重クオート文字リテラル</a></h3> <p>3つのダブルクオートで生成された文字列は特殊な挙動をします。複数行にわたる長文などの扱いに有用です。</p> <p>閉じ&quot;&quot;&quot;の行を含む行のうち最もインデントレベルが浅い行がインデントの基準となり、その行のインデントレベルが0になるように全行から同数のインデントが削除されます。</p> <pre><code class="julia hljs">str = <span class=hljs-string >&quot;&quot;&quot;
+    Hello,
+    world.
+&quot;&quot;&quot;</span>
+<span class=hljs-comment >#-&gt; &quot;    Hello,\n    world.\n&quot;</span></code></pre> <p>ここでは文字数が0の最終行&#40;閉じ&quot;&quot;&quot;の行&#41;が基準になっています。</p> <pre><code class="julia hljs"><span class=hljs-string >&quot;&quot;&quot;    This
+  is
+    a test&quot;&quot;&quot;</span>
+<span class=hljs-comment >#-&gt; &quot;    This\nis\n  a test&quot;</span></code></pre> <p>この例ではではisの行が基準になっているため、a testの行のインデントが空白4つから2つに減っていますね。問題は開始&quot;&quot;&quot;に続く一行目です。実は「開始&quot;&quot;&quot;に続く最初の行」と「空白かtabのみを含む行」はインデント基準になりません。（ちなみに閉じ&quot;&quot;&quot;が続く最終行は空白かtabのみであっても基準となり得ます。）</p> <p>また、開始&quot;&quot;&quot;の直後に改行がある場合、この改行は削除されます。つまり下の2つは同じです。</p> <pre><code class="julia hljs"><span class=hljs-string >&quot;&quot;&quot;hello&quot;&quot;&quot;</span>
+
+<span class=hljs-string >&quot;&quot;&quot;
+hello&quot;&quot;&quot;</span></code></pre> <h2 id="演算"><a href="#演算">演算</a></h2> <p>文字と文字列では辞書的な比較が出来ます。</p> <pre><code class="julia hljs"><span class=hljs-string >&quot;abc&quot;</span> &lt; <span class=hljs-string >&quot;abd&quot;</span>   <span class=hljs-comment >#-&gt; true</span>
+
+<span class=hljs-string >&quot;abracadabra&quot;</span> == <span class=hljs-string >&quot;xylophone&quot;</span>   <span class=hljs-comment >#-&gt; false</span>
+
+<span class=hljs-string >&quot;Hello, world.&quot;</span> != <span class=hljs-string >&quot;Goodbye, world.&quot;</span>   <span class=hljs-comment >#-&gt; true</span>
+
+<span class=hljs-string >&quot;1 + 2 = 3&quot;</span> == <span class=hljs-string >&quot;1 + 2 = <span class=hljs-subst >$(<span class=hljs-number >1</span> + <span class=hljs-number >2</span>)</span>&quot;</span>   <span class=hljs-comment >#-&gt; true</span></code></pre> <p>文字列中に含まれる特定の文字のうち最初と最後の文字の添字は<code>findfirst</code>関数と<code>findlast</code>関数を使って取得できます。</p> <pre><code class="julia hljs">findfirst(isequal(<span class=hljs-string >&#x27;o&#x27;</span>), <span class=hljs-string >&quot;xylophone&quot;</span>)   <span class=hljs-comment >#-&gt; 4</span>
+
+findlast(isequal(<span class=hljs-string >&#x27;o&#x27;</span>), <span class=hljs-string >&quot;xylophone&quot;</span>)   <span class=hljs-comment >#-&gt; 7</span></code></pre> <p>n文字目以前・以降の特定の文字の添字は<code>findprev</code>および<code>findnext</code>関数で取得できます</p> <pre><code class="julia hljs">findnext(isequal(<span class=hljs-string >&#x27;o&#x27;</span>), <span class=hljs-string >&quot;xylophone&quot;</span>, <span class=hljs-number >1</span>)   <span class=hljs-comment >#-&gt; 4</span>
+
+findnext(isequal(<span class=hljs-string >&#x27;o&#x27;</span>), <span class=hljs-string >&quot;xylophone&quot;</span>, <span class=hljs-number >5</span>)   <span class=hljs-comment >#-&gt; 7</span>
+
+findprev(isequal(<span class=hljs-string >&#x27;o&#x27;</span>), <span class=hljs-string >&quot;xylophone&quot;</span>, <span class=hljs-number >5</span>)   <span class=hljs-comment >#-&gt; 4</span></code></pre> <p>文字列中に特定の文字あるいはSubStringが含まれるかどうかを判定するには<code>occursin</code>関数を使います。</p> <pre><code class="julia hljs">occursin(<span class=hljs-string >&quot;world&quot;</span>, <span class=hljs-string >&quot;Hello, world.&quot;</span>)   <span class=hljs-comment >#-&gt; true</span>
+
+occursin(<span class=hljs-string >&quot;a&quot;</span>, <span class=hljs-string >&quot;Xylophon&quot;</span>)   <span class=hljs-comment >#-&gt; false</span>
+
+occursin(<span class=hljs-string >&#x27;o&#x27;</span>, <span class=hljs-string >&quot;Xylophon&quot;</span>)   <span class=hljs-comment >#-&gt; true</span></code></pre> <p>他にも有用な関数として指定回数だけ文字列を繰り返す<code>repeat</code>や特定の文字で区切って文字列を結合する<code>join</code>などがあります。</p> <pre><code class="julia hljs">repeat(<span class=hljs-string >&quot;.:Z:.&quot;</span>, <span class=hljs-number >5</span>)   <span class=hljs-comment >#-&gt; &quot;.:Z:..:Z:..:Z:..:Z:..:Z:.&quot;</span>
+
+strs = [<span class=hljs-string >&quot;よし&quot;</span>, <span class=hljs-string >&quot;いく&quot;</span>, <span class=hljs-string >&quot;ぞう&quot;</span>]
+join(strs, <span class=hljs-string >&quot;☆&quot;</span>)   <span class=hljs-comment >#-&gt; &quot;よし☆いく☆ぞう&quot;</span></code></pre> <p>そのほかにも様々な関数が用意されています。これらはBaseライブラリの<a href="/base/string/">文字列</a>項にて記載してあります。</p> <h2 id="そのほかの文字列リテラル"><a href="#そのほかの文字列リテラル">そのほかの文字列リテラル</a></h2> <h3 id="正規表現"><a href="#正規表現">正規表現</a></h3> <div class=page-foot > <div class=copyright > &copy; okshouiti. 最終更新: 2021-01-18. <small>built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a></small>. </div> </div> </div> </div>

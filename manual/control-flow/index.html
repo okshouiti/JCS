@@ -1,0 +1,267 @@
+<!doctype html> <html lang=ja > <meta charset=UTF-8 > <meta name=viewport  content="width=device-width, initial-scale=1"> <script src="/libs/main.js"></script> <link rel=stylesheet  href="/css/reboot.css"> <link rel=stylesheet  href="/css/main.css"> <link rel=icon  href="/assets/favicon.png"> <title>制御構造</title> <style> span.name { color: #50b949; font-family: Cica } </style> <div class=sidebar > <div class="container sidebar-sticky"> <div class=sidebar-about > <div class=top >JCS</div> <div class=lead >Julia Cheat Site.</div> </div> <nav class=sidebar-nav > <ul class=menu-list > <li class=menu-parent ><a href="/" class=menu-link >トップ</a> <li class="menu-parent active"><a href="/manual/getting-started/" class=menu-link >マニュアル</a> <ul class=menu-child > <li><a class="" href="/manual/getting-started/">はじめる</a> <li><a class="" href="/manual/variables/">変数</a> <li><a class="" href="/manual/int-and-float/">整数と浮動小数点数</a> <li><a class="" href="/manual/operations/">数理演算と初歩的な関数</a> <li><a class="" href="/manual/complex-and-rational/">複素数と有理数</a> <li><a class="" href="/manual/strings/">文字列</a> <li><a class="" href="/manual/functions/">関数</a> <li><a class=active  href="/manual/control-flow/">制御構造</a> <li><a class="" href="/manual/scope/">スコープ</a> <li><a class="" href="/manual/type/">型</a> </ul> <!-- <li class="menu-parent {{ispage base/*}}active{{end}}"><a href="/base/essentials/" class=menu-link >Base</a> <ul class=menu-child > {{for p in base}} <li><a class="{{ispage {{p}}}}active{{end}}" href="/{{fill p}}/">{{fill title p}}</a> {{end}} </ul> <li class="menu-parent {{ispage omake/*}}active{{end}}"><a href="/omake/Cascadia.jl/" class=menu-link >おまけ</a> <ul class=menu-child > {{for p in omake}} <li><a class="{{ispage {{p}}}}active{{end}}" href="/{{fill p}}/">{{fill title p}}</a> {{end}} </ul> --> </ul> </nav> </div> </div> <div class="content container"> <header> <div class=sidebar-button  onclick="toggle()"> <div class=bar1 ></div> <div class=bar2 ></div> <div class=bar3 ></div> </div> </header> <div class=franklin-content ><h1 id="制御構造"><a href="#制御構造">制御構造</a></h1> <div class=franklin-toc ><ol><li><a href="#複合式">複合式</a><li><a href="#条件評価">条件評価</a><ol><li><a href="#三項演算">三項演算</a></ol><li><a href="#短縮評価">短縮評価</a><li><a href="#反復評価-ループ">反復評価-ループ</a><ol><li><a href="#whileループ">whileループ</a><li><a href="#forループ">forループ</a><li><a href="#反復の制御">反復の制御</a><li><a href="#ネスト">ネスト</a></ol><li><a href="#例外処理">例外処理</a><ol><li><a href="#組み込みの例外">組み込みの例外</a><li><a href="#13633231208144796923"></a></ol></ol></div> <p>Julia provides a variety of control flow constructs:</p> <ul> <li><p>Compound Expressions: begin and ;.</p> <li><p>Conditional Evaluation: if-elseif-else and ?: &#40;ternary operator&#41;.</p> <li><p>Short-Circuit Evaluation: &amp;&amp;, || and chained comparisons.</p> <li><p>Repeated Evaluation: Loops: while and for.</p> <li><p>Exception Handling: try-catch, error and throw.</p> <li><p>Tasks &#40;aka Coroutines&#41;: yieldto.</p> </ul> <p>The first five control flow mechanisms are standard to high-level programming languages. Tasks are not so standard: they provide non-local control flow, making it possible to switch between temporarily-suspended computations. This is a powerful construct: both exception handling and cooperative multitasking are implemented in Julia using tasks. Everyday programming requires no direct usage of tasks, but certain problems can be solved much more easily by using tasks.</p> <h2 id="複合式"><a href="#複合式">複合式</a></h2> <p>いくつかの式をまとめて一つの式として扱えるようにしたもの。式を順に評価していき、その結果を自身の値とする。<code>begin</code>あるいは<code>;</code>でまとめることができます。</p> <pre><code class="julia hljs">z = <span class=hljs-keyword >begin</span>
+    x = <span class=hljs-number >1</span>
+    y = <span class=hljs-number >2</span>
+    x + y
+<span class=hljs-keyword >end</span>
+
+z = (x = <span class=hljs-number >1</span>; y = <span class=hljs-number >2</span>; x + y)   <span class=hljs-comment >#&gt; 3</span></code></pre> <p>これらは一行あるいは複数行のどちらでも記述可能です。</p> <pre><code class="julia hljs"><span class=hljs-keyword >begin</span> x = <span class=hljs-number >1</span>; y = <span class=hljs-number >2</span>; x + y <span class=hljs-keyword >end</span>
+
+(x = <span class=hljs-number >1</span>;
+ y = <span class=hljs-number >2</span>;
+ x + y)   <span class=hljs-comment >#-&gt; 3</span></code></pre> <h2 id="条件評価"><a href="#条件評価">条件評価</a></h2> <p>条件式の真偽によって処理を分岐できます。条件式とそれが真であるときに評価されるコードブロックのセットで構成されます。</p> <ul> <li><p><code>if</code> - 基本形、条件式が真であれば評価。</p> <li><p><code>elseif</code> - 任意の数の条件式を追加。</p> <li><p><code>else</code> - すべての条件式が偽の場合の処理を記述。</p> </ul> <pre><code class="julia hljs"><span class=hljs-keyword >if</span> 条件式<span class=hljs-number >1</span>
+    コードブロック<span class=hljs-number >1</span>
+<span class=hljs-keyword >elseif</span> 条件式<span class=hljs-number >2</span>
+    コードブロック<span class=hljs-number >2</span>
+<span class=hljs-keyword >else</span>
+    コードブロック<span class=hljs-number >3</span>
+<span class=hljs-keyword >end</span></code></pre> <p><div class=aa ><div class=example-btn >▼</div> <div class=example ><pre><code class="julia-repl hljs"><span class=hljs-meta >julia&gt;</span><span class=julia > <span class=hljs-keyword >function</span> test(x, y)
+           <span class=hljs-keyword >if</span> x &lt; y
+               println(<span class=hljs-string >&quot;xはyより小さい&quot;</span>)
+           <span class=hljs-keyword >elseif</span> x &gt; y
+               println(<span class=hljs-string >&quot;xはyより大きい&quot;</span>)
+           <span class=hljs-keyword >else</span>
+               println(<span class=hljs-string >&quot;xとyは等しい&quot;</span>)
+           <span class=hljs-keyword >end</span>
+       <span class=hljs-keyword >end</span>
+</span>test (generic function with 1 method)
+
+<span class=hljs-meta >julia&gt;</span><span class=julia > test(<span class=hljs-number >1</span>, <span class=hljs-number >2</span>)
+</span>xはyより小さい
+
+<span class=hljs-meta >julia&gt;</span><span class=julia > test(<span class=hljs-number >2</span>, <span class=hljs-number >1</span>)
+</span>xはyより大きい
+
+<span class=hljs-meta >julia&gt;</span><span class=julia > test(<span class=hljs-number >1</span>, <span class=hljs-number >1</span>)
+</span>xとyは等しい</code></pre> <p><code>if</code>文のブロックはローカルスコープを導入しないためブロック内で新たに定義された変数をブロック外の式から参照できます。</p> <pre><code class="julia-repl hljs"><span class=hljs-meta >julia&gt;</span><span class=julia > <span class=hljs-keyword >function</span> test(x,y)
+           <span class=hljs-keyword >if</span> x &lt; y
+               relation = <span class=hljs-string >&quot;less than&quot;</span>
+           <span class=hljs-keyword >elseif</span> x == y
+               relation = <span class=hljs-string >&quot;equal to&quot;</span>
+           <span class=hljs-keyword >else</span>
+               relation = <span class=hljs-string >&quot;greater than&quot;</span>
+           <span class=hljs-keyword >end</span>
+           <span class=hljs-comment ># ifブロック以降の式から変数を参照</span>
+           println(<span class=hljs-string >&quot;x is &quot;</span>, relation, <span class=hljs-string >&quot; y.&quot;</span>)
+       <span class=hljs-keyword >end</span>
+</span>test (generic function with 1 method)
+
+<span class=hljs-meta >julia&gt;</span><span class=julia > test(<span class=hljs-number >2</span>, <span class=hljs-number >1</span>)
+</span>x is greater than y.</code></pre> <p><code>if</code>文をこのように使う場合、条件分岐の全パターンで変数を定義するよう気をつけてください。変数を定義していないブロックがある場合、後にその変数を利用する際にエラーになり得ます。</p></div></div> <code>if</code>ブロックは値を返します。複合式と同様に返される値は評価されるブロックの最後の式の結果です。</p> <p>また、Juliaの条件評価で使えるのは真偽値を表す<code>Bool</code>型の2値（<code>true</code>と<code>false</code>）のみです。一部の言語で使われている1と0は使えません。 <div class=aa ><div class=example-btn >▼</div> <div class=example ><pre><code class="julia-repl hljs"><span class=hljs-meta >julia&gt;</span><span class=julia > x = <span class=hljs-number >3</span>;
+</span>
+<span class=hljs-meta >julia&gt;</span><span class=julia > <span class=hljs-keyword >if</span> x &gt; <span class=hljs-number >0</span>
+           <span class=hljs-string >&quot;positive!&quot;</span>
+       <span class=hljs-keyword >else</span>
+           <span class=hljs-string >&quot;negative...&quot;</span>
+       <span class=hljs-keyword >end</span>
+</span>&quot;positive!&quot;
+
+
+
+<span class=hljs-meta >julia&gt;</span><span class=julia > <span class=hljs-keyword >if</span> <span class=hljs-literal >true</span>
+           println(<span class=hljs-string >&quot;真&quot;</span>)
+       <span class=hljs-keyword >end</span>
+</span>真
+
+<span class=hljs-meta >julia&gt;</span><span class=julia > <span class=hljs-keyword >if</span> <span class=hljs-number >1</span>
+           println(<span class=hljs-string >&quot;真&quot;</span>)
+       <span class=hljs-keyword >end</span>
+</span>ERROR: TypeError: non-boolean (Int64) used in boolean context</code></pre></div></div></p> <h3 id="三項演算"><a href="#三項演算">三項演算</a></h3> <p>条件式と式が単純な場合は三項演算を使うことで可読性の高いコードになります。</p> <pre><code class="julia hljs">条件式 ? 式<span class=hljs-number >1</span> : 式<span class=hljs-number >2</span>
+
+<span class=hljs-comment ># 同上</span>
+<span class=hljs-keyword >if</span> 条件式
+    式<span class=hljs-number >1</span>
+<span class=hljs-keyword >else</span>
+    式<span class=hljs-number >2</span>
+<span class=hljs-keyword >end</span></code></pre> <p>上の2つは同じです。各式と<code>?</code>および<code>:</code>の間の半角空白は必須。</p> <p>これらを組み合わせることも可能。</p> <pre><code class="julia hljs"><span class=hljs-comment ># 分かりやすく括弧を付けた、無くても良い</span>
+条件式<span class=hljs-number >1</span> ? 式<span class=hljs-number >1</span> : (条件式<span class=hljs-number >2</span> ? 式<span class=hljs-number >2</span> : 式<span class=hljs-number >3</span>)
+
+<span class=hljs-comment ># 上と同じ結果を得る</span>
+<span class=hljs-keyword >if</span> 条件式<span class=hljs-number >1</span>
+    式<span class=hljs-number >1</span>
+<span class=hljs-keyword >elseif</span> 条件式<span class=hljs-number >2</span>
+    式<span class=hljs-number >2</span>
+<span class=hljs-keyword >else</span>
+    式<span class=hljs-number >3</span>
+<span class=hljs-keyword >end</span></code></pre> <h2 id="短縮評価"><a href="#短縮評価">短縮評価</a></h2> <p><code>&amp;&amp;</code>と<code>||</code>はブール演算子として使われ、余分な処理を省くために以下のような性質を持ちます。</p> <ul> <li><p><code>a &amp;&amp; b</code> - aが<code>false</code>ならbにかかわらず<code>false</code>。（aかつb）</p> <li><p><code>a || b</code> - aが<code>true</code>ならbにかかわらず<code>true</code>。（aまたはb）</p> </ul> <p>これらの性質から条件評価に似た使い方が出来ます。</p> <pre><code class="julia hljs"><span class=hljs-comment ># 条件式が真であれば式が評価される</span>
+条件式 &amp;&amp; 式
+
+<span class=hljs-comment ># 条件式が偽 〃</span>
+条件式 || 式</code></pre> <div class=aa ><div class=example-btn >▼</div> <div class=example ><p>評価される式と結果の値は次のようになります。</p> <pre><code class="julia-repl hljs"><span class=hljs-meta >julia&gt;</span><span class=julia > 真(x) = (println(x); <span class=hljs-literal >true</span>);
+</span>
+<span class=hljs-meta >julia&gt;</span><span class=julia > 偽(x) = (println(x); <span class=hljs-literal >false</span>);
+</span>
+<span class=hljs-meta >julia&gt;</span><span class=julia > 式<span class=hljs-number >1</span>,式<span class=hljs-number >2</span> = <span class=hljs-string >&quot;式1は評価された&quot;</span>,<span class=hljs-string >&quot;式2は評価された&quot;</span>;
+</span>
+<span class=hljs-meta >julia&gt;</span><span class=julia > 真(式<span class=hljs-number >1</span>) &amp;&amp; 真(式<span class=hljs-number >2</span>)
+</span>式1は評価された
+式2は評価された
+true
+
+<span class=hljs-meta >julia&gt;</span><span class=julia > 真(式<span class=hljs-number >1</span>) &amp;&amp; 偽(式<span class=hljs-number >2</span>)
+</span>式1は評価された
+式2は評価された
+false
+
+<span class=hljs-meta >julia&gt;</span><span class=julia > 偽(式<span class=hljs-number >1</span>) &amp;&amp; 真(式<span class=hljs-number >2</span>)
+</span>式1は評価された
+false
+
+<span class=hljs-meta >julia&gt;</span><span class=julia > 偽(式<span class=hljs-number >1</span>) &amp;&amp; 偽(式<span class=hljs-number >2</span>)
+</span>式1は評価された
+false
+
+<span class=hljs-meta >julia&gt;</span><span class=julia > 真(式<span class=hljs-number >1</span>) || 真(式<span class=hljs-number >2</span>)
+</span>式1は評価された
+true
+
+<span class=hljs-meta >julia&gt;</span><span class=julia > 真(式<span class=hljs-number >1</span>) || 偽(式<span class=hljs-number >2</span>)
+</span>式1は評価された
+true
+
+<span class=hljs-meta >julia&gt;</span><span class=julia > 偽(式<span class=hljs-number >1</span>) || 真(式<span class=hljs-number >2</span>)
+</span>式1は評価された
+式2は評価された
+true
+
+<span class=hljs-meta >julia&gt;</span><span class=julia > 偽(式<span class=hljs-number >1</span>) || 偽(式<span class=hljs-number >2</span>)
+</span>式1は評価された
+式2は評価された
+false</code></pre> <p>以下は短縮評価を使って再帰的に階乗を求める関数を定義した例です。</p> <pre><code class="julia-repl hljs"><span class=hljs-meta >julia&gt;</span><span class=julia > <span class=hljs-keyword >function</span> fact(n::<span class=hljs-built_in >Int</span>)
+           n &gt;= <span class=hljs-number >0</span> || error(<span class=hljs-string >&quot;nは非負でなければいけません！&quot;</span>)
+           n == <span class=hljs-number >0</span> &amp;&amp; <span class=hljs-keyword >return</span> <span class=hljs-number >1</span>
+           n * fact(n-<span class=hljs-number >1</span>)
+       <span class=hljs-keyword >end</span>
+</span>fact (generic function with 1 method)
+
+<span class=hljs-meta >julia&gt;</span><span class=julia > fact(<span class=hljs-number >5</span>)
+</span>120
+
+<span class=hljs-meta >julia&gt;</span><span class=julia > fact(<span class=hljs-number >0</span>)
+</span>1
+
+<span class=hljs-meta >julia&gt;</span><span class=julia > fact(-<span class=hljs-number >1</span>)
+</span>ERROR: nは非負でなければいけません！</code></pre></div></div> <p>条件式は<code>if</code>文と同様に<code>Bool</code>型の値のみ使えます。一方で式2ではあらゆる値を受け付け、式2が評価された際にはその値を返値として返します。</p> <p>You can easily experiment in the same way with the associativity and precedence of various combinations of &amp;&amp; and || operators.</p> <h2 id="反復評価-ループ"><a href="#反復評価-ループ">反復評価-ループ</a></h2> <h3 id="whileループ"><a href="#whileループ">whileループ</a></h3> <p><code>while</code>ループは条件式が真である限りコードブロックを評価し続けます。</p> <pre><code class="julia hljs"><span class=hljs-keyword >while</span> 条件式
+    コードブロック
+<span class=hljs-keyword >end</span></code></pre> <div class=aa ><div class=example-btn >▼</div> <div class=example ><pre><code class="julia-repl hljs"><span class=hljs-meta >julia&gt;</span><span class=julia > i = <span class=hljs-number >1</span>;
+</span>
+<span class=hljs-meta >julia&gt;</span><span class=julia > <span class=hljs-keyword >while</span> i &lt;= <span class=hljs-number >5</span>
+           println(i)
+           <span class=hljs-keyword >global</span> i += <span class=hljs-number >1</span>
+       <span class=hljs-keyword >end</span>
+</span>1
+2
+3
+4
+5</code></pre></div></div> <h3 id="forループ"><a href="#forループ">forループ</a></h3> <p><code>for</code>ループはイテラブルオブジェクトを使って反復処理をします。<code>while</code>ループとの主な違いは反復に利用する変数がブロック外からアクセス可能か否かです。<code>while</code>ループではブロック外で予め定義された変数を使って反復しますが、<code>for</code>ループではブロックの内側のみでアクセス可能な変数が使われます。</p> <pre><code class="julia hljs"><span class=hljs-keyword >for</span> 変数 = イテラブルオブジェクト
+    コードブロック
+<span class=hljs-keyword >end</span></code></pre> <div class=aa ><div class=example-btn >▼</div> <div class=example ><pre><code class="julia-repl hljs"><span class=hljs-meta >julia&gt;</span><span class=julia > <span class=hljs-keyword >for</span> j = <span class=hljs-number >1</span>:<span class=hljs-number >5</span>
+           println(j)
+       <span class=hljs-keyword >end</span>
+</span>1
+2
+3
+4
+5
+
+<span class=hljs-meta >julia&gt;</span><span class=julia > j
+</span>ERROR: UndefVarError: j not defined</code></pre> <p>任意の変数名と、<code>&#61;</code>に加えて<code>in</code>および<code>∈</code>キーワードが使えます。さらに範囲オブジェクト以外にも配列やタプルなどのイテラブル（反復可能）オブジェクトを使って反復処理が可能です。</p> <pre><code class="julia-repl hljs"><span class=hljs-meta >julia&gt;</span><span class=julia > <span class=hljs-keyword >for</span> i <span class=hljs-keyword >in</span> [<span class=hljs-number >1</span>,<span class=hljs-number >4</span>,<span class=hljs-number >0</span>]
+           println(i)
+       <span class=hljs-keyword >end</span>
+</span>1
+4
+0
+
+<span class=hljs-meta >julia&gt;</span><span class=julia > strs = (<span class=hljs-string >&quot;foo&quot;</span>,<span class=hljs-string >&quot;bar&quot;</span>,<span class=hljs-string >&quot;baz&quot;</span>);
+</span>
+<span class=hljs-meta >julia&gt;</span><span class=julia > <span class=hljs-keyword >for</span> str ∈ strs
+           println(str)
+       <span class=hljs-keyword >end</span>
+</span>foo
+bar
+baz</code></pre></div></div> <h3 id="反復の制御"><a href="#反復の制御">反復の制御</a></h3> <p>関数には即座に値を返し評価を終了する<code>return</code>キーワードがありますが、ループ処理にもこれに近いキーワードが二つあります。</p> <ul> <li><p><code>break</code> - 反復自体の終了。このキーワードが評価された時点でループを終了。</p> <li><p><code>continue</code> - 現在のループを終了。ループ自体は継続しており、次のループへ移行。</p> </ul> <div class=aa ><div class=example-btn >▼</div> <div class=example ><pre><code class="julia-repl hljs"><span class=hljs-meta >julia&gt;</span><span class=julia > i = <span class=hljs-number >1</span>;
+</span>
+<span class=hljs-meta >julia&gt;</span><span class=julia > <span class=hljs-keyword >while</span> <span class=hljs-literal >true</span>
+           println(i)
+           <span class=hljs-keyword >if</span> i &gt;= <span class=hljs-number >5</span>   <span class=hljs-comment ># 5以上であれば反復を終了</span>
+               <span class=hljs-keyword >break</span>
+           <span class=hljs-keyword >end</span>
+           <span class=hljs-keyword >global</span> i += <span class=hljs-number >1</span>
+       <span class=hljs-keyword >end</span>
+</span>1
+2
+3
+4
+5
+
+<span class=hljs-meta >julia&gt;</span><span class=julia > <span class=hljs-keyword >for</span> i = <span class=hljs-number >1</span>:<span class=hljs-number >10</span>
+           <span class=hljs-keyword >if</span> i%<span class=hljs-number >3</span> != <span class=hljs-number >0</span>   <span class=hljs-comment ># 3の倍数以外はcontinueでスキップ</span>
+               <span class=hljs-keyword >continue</span>
+           <span class=hljs-keyword >end</span>
+           println(i)
+       <span class=hljs-keyword >end</span>
+</span>3
+6
+9</code></pre> <p>この<code>while</code>ループは条件式がリテラル<code>true</code>なので<code>break</code>キーワードが無ければ無限にループします。</p></div></div> <h3 id="ネスト"><a href="#ネスト">ネスト</a></h3> <p><code>for</code>ループは入れ子にでき、単純な入れ子の場合には簡潔な記法（便宜的に単純ネスト記法と呼ぶことにします）も用意されていますが、特定の状況では振る舞いが異なることもあるため注意が必要です。 <div class=aa ><div class=example-btn >▼</div> <div class=example ><p>単純ネスト記法では反復に使うすべての変数が反復の度に新しくセットされるのに対して、通常のネストでは内側の反復処理が終わって初めて親ループの変数が新しくセットされます。</p> <pre><code class="julia-repl hljs"><span class=hljs-meta >julia&gt;</span><span class=julia > <span class=hljs-keyword >for</span> i=<span class=hljs-number >1</span>:<span class=hljs-number >2</span>, j=<span class=hljs-number >3</span>:<span class=hljs-number >4</span>
+           println((i,j))
+           i = <span class=hljs-number >0</span>
+       <span class=hljs-keyword >end</span>
+</span>(1, 3)
+(1, 4)
+(2, 3)
+(2, 4)
+
+<span class=hljs-meta >julia&gt;</span><span class=julia > <span class=hljs-keyword >for</span> i = <span class=hljs-number >1</span>:<span class=hljs-number >2</span>
+           <span class=hljs-keyword >for</span> j = <span class=hljs-number >3</span>:<span class=hljs-number >4</span>
+               println((i, j))
+               i = <span class=hljs-number >0</span>
+           <span class=hljs-keyword >end</span>
+       <span class=hljs-keyword >end</span>
+</span>(1, 3)
+(0, 4)
+(2, 3)
+(0, 4)</code></pre> <p><code>break</code>キーワードはそれが含まれるループを終了するので、普通にネストしたループでは内側ブロックを抜けるだけなのに対し、単純ネスト記法はあくまで一つの反復ブロック扱いなので評価された時点で終了します。</p> <pre><code class="julia-repl hljs"><span class=hljs-meta >julia&gt;</span><span class=julia > <span class=hljs-keyword >for</span> i <span class=hljs-keyword >in</span> <span class=hljs-number >1</span>:<span class=hljs-number >2</span>:<span class=hljs-number >11</span>, j <span class=hljs-keyword >in</span> <span class=hljs-number >2</span>:<span class=hljs-number >3</span>:<span class=hljs-number >11</span>
+           <span class=hljs-keyword >if</span> i == j
+               println(<span class=hljs-string >&quot;iとjが持つ最小の共通値は<span class=hljs-variable >$i</span>&quot;</span>)
+               <span class=hljs-keyword >break</span>
+           <span class=hljs-keyword >end</span>
+       <span class=hljs-keyword >end</span>
+</span>iとjが持つ最小の共通値は5
+
+<span class=hljs-meta >julia&gt;</span><span class=julia > <span class=hljs-keyword >for</span> i <span class=hljs-keyword >in</span> <span class=hljs-number >1</span>:<span class=hljs-number >2</span>:<span class=hljs-number >11</span>
+           <span class=hljs-keyword >for</span> j <span class=hljs-keyword >in</span> <span class=hljs-number >2</span>:<span class=hljs-number >3</span>:<span class=hljs-number >11</span>
+               <span class=hljs-keyword >if</span> i == j
+                   println(<span class=hljs-string >&quot;iとjが持つ最小の共通値は<span class=hljs-variable >$i</span>&quot;</span>)
+                   <span class=hljs-keyword >break</span>
+               <span class=hljs-keyword >end</span>
+           <span class=hljs-keyword >end</span>
+       <span class=hljs-keyword >end</span>
+</span>iとjが持つ最小の共通値は5
+iとjが持つ最小の共通値は11</code></pre></div></div></p> <h2 id="例外処理"><a href="#例外処理">例外処理</a></h2> <p>不慮の事態により関数が予期せぬ値を返したとき、その値によってエラーを吐いたり適切な処理をすることもあります。このような処理には例外オブジェクトを使います。</p> <h3 id="組み込みの例外"><a href="#組み込みの例外">組み込みの例外</a></h3> <pre><code class="plaintext hljs">Exception
+    │
+    ├─── ArgumentError
+    ├─── BoundsError
+    ├─── CompositeException
+    ├─── DimensionMismatch
+    ├─── DivideError
+    ├─── DomainError
+    ├─── EOFError
+    ├─── ErrorException
+    ├─── InexactError
+    ├─── InitError
+    ├─── InterruptException
+    ├─── InvalidStateException
+    ├─── KeyError
+    ├─── LoadError
+    ├─── OutOfMemoryError
+    ├─── ReadOnlyMemoryError
+    ├─── RemoteException
+    ├─── MethodError
+    ├─── OverflowError
+    ├─── Meta.ParseError
+    ├─── SystemError
+    ├─── TypeError
+    ├─── UndefRefError
+    ├─── UndefVarError
+    └─── StringIndexError</code></pre> <div class=aa ><div class=example-btn >▼</div> <div class=example ><pre><code class="julia-repl hljs"><span class=hljs-meta >julia&gt;</span><span class=julia > sqrt(-<span class=hljs-number >1</span>)
+</span>ERROR: DomainError with -1.0:
+sqrt will only return a complex result if called with a complex argument. Try sqrt(Complex(x)).</code></pre></div></div> <h3 id=13633231208144796923 ><a href="#13633231208144796923"></a></h3> <div class=page-foot > <div class=copyright > &copy; okshouiti. 最終更新: 2021-01-18. <small>built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a></small>. </div> </div> </div> </div>

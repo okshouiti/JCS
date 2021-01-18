@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+<url>
+    <loc>https://jcs.okshouiti.com/manual/type/index.html</loc>
+    <lastmod>2021-01-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
+    <loc>https://jcs.okshouiti.com/manual/functions/index.html</loc>
+    <lastmod>2021-01-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
+    <loc>https://jcs.okshouiti.com/manual/interfaces/index.html</loc>
+    <lastmod>2021-01-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
+    <loc>https://jcs.okshouiti.com/manual/strings/index.html</loc>
+    <lastmod>2021-01-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
+    <loc>https://jcs.okshouiti.com/manual/variables/index.html</loc>
+    <lastmod>2021-01-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
+    <loc>https://jcs.okshouiti.com/404/index.html</loc>
+    <lastmod>2021-01-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
+    <loc>https://jcs.okshouiti.com/manual/operations/index.html</loc>
+    <lastmod>2021-01-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
+    <loc>https://jcs.okshouiti.com/manual/control-flow/index.html</loc>
+    <lastmod>2021-01-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
+    <loc>https://jcs.okshouiti.com/index.html</loc>
+    <lastmod>2021-01-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
+    <loc>https://jcs.okshouiti.com/manual/int-and-float/index.html</loc>
+    <lastmod>2021-01-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
+    <loc>https://jcs.okshouiti.com/manual/getting-started/index.html</loc>
+    <lastmod>2021-01-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
+    <loc>https://jcs.okshouiti.com/manual/scope/index.html</loc>
+    <lastmod>2021-01-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
+    <loc>https://jcs.okshouiti.com/manual/complex-and-rational/index.html</loc>
+    <lastmod>2021-01-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+</urlset>

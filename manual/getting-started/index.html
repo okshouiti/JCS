@@ -1,0 +1,22 @@
+<!doctype html> <html lang=ja > <meta charset=UTF-8 > <meta name=viewport  content="width=device-width, initial-scale=1"> <script src="/libs/main.js"></script> <link rel=stylesheet  href="/css/reboot.css"> <link rel=stylesheet  href="/css/main.css"> <link rel=icon  href="/assets/favicon.png"> <title>はじめる</title> <style> span.name { color: #50b949; font-family: Cica } </style> <div class=sidebar > <div class="container sidebar-sticky"> <div class=sidebar-about > <div class=top >JCS</div> <div class=lead >Julia Cheat Site.</div> </div> <nav class=sidebar-nav > <ul class=menu-list > <li class=menu-parent ><a href="/" class=menu-link >トップ</a> <li class="menu-parent active"><a href="/manual/getting-started/" class=menu-link >マニュアル</a> <ul class=menu-child > <li><a class=active  href="/manual/getting-started/">はじめる</a> <li><a class="" href="/manual/variables/">変数</a> <li><a class="" href="/manual/int-and-float/">整数と浮動小数点数</a> <li><a class="" href="/manual/operations/">数理演算と初歩的な関数</a> <li><a class="" href="/manual/complex-and-rational/">複素数と有理数</a> <li><a class="" href="/manual/strings/">文字列</a> <li><a class="" href="/manual/functions/">関数</a> <li><a class="" href="/manual/control-flow/">制御構造</a> <li><a class="" href="/manual/scope/">スコープ</a> <li><a class="" href="/manual/type/">型</a> </ul> <!-- <li class="menu-parent {{ispage base/*}}active{{end}}"><a href="/base/essentials/" class=menu-link >Base</a> <ul class=menu-child > {{for p in base}} <li><a class="{{ispage {{p}}}}active{{end}}" href="/{{fill p}}/">{{fill title p}}</a> {{end}} </ul> <li class="menu-parent {{ispage omake/*}}active{{end}}"><a href="/omake/Cascadia.jl/" class=menu-link >おまけ</a> <ul class=menu-child > {{for p in omake}} <li><a class="{{ispage {{p}}}}active{{end}}" href="/{{fill p}}/">{{fill title p}}</a> {{end}} </ul> --> </ul> </nav> </div> </div> <div class="content container"> <header> <div class=sidebar-button  onclick="toggle()"> <div class=bar1 ></div> <div class=bar2 ></div> <div class=bar3 ></div> </div> </header> <div class=franklin-content ><h1 id="はじめる"><a href="#はじめる">はじめる</a></h1> <div class=franklin-toc ><ol><li><a href="#インストール">インストール</a><li><a href="#juliaを動かす">Juliaを動かす</a></ol></div> <h2 id="インストール"><a href="#インストール">インストール</a></h2> <p>Juliaのインストールは簡単です。<a href="https://julialang.org/downloads/">https://julialang.org/downloads/</a>から自分のOS用のバイナリをダウンロードしてインストールしましょう。またはソースコードから自分でビルドすることも可能です。</p> <h2 id="juliaを動かす"><a href="#juliaを動かす">Juliaを動かす</a></h2> <p>Juliaで書かれたコードを実行するには2つの方法があります。1つはREPLと呼ばれる対話環境にて</p> <pre><code class="julia-repl hljs">$ julia
+               _
+   _       _ _(_)_     |  Documentation: https://docs.julialang.org
+  (_)     | (_) (_)    |
+   _ _   _| |_  __ _   |  Type &quot;?&quot; for help, &quot;]?&quot; for Pkg help.
+  | | | | | | |/ _` |  |
+  | | |_| | | | (_| |  |  Version 1.3.1 (2019-12-30)
+ _/ |\__&#x27;_|_|_|\__&#x27;_|  |  Official https://julialang.org/ release
+|__/                   |
+
+<span class=hljs-meta >julia&gt;</span><span class=julia > println(<span class=hljs-string >&quot;Hello, World&quot;</span>)
+</span>Hello, World
+
+<span class=hljs-meta >julia&gt;</span></code></pre> <p>のようにするか、コマンドラインから</p> <pre><code class="julia hljs">$ julia script.jl arg1 arg2...</code></pre>
+<p>と呼び出す方法があります。</p>
+<div class=page-foot >
+  <div class=copyright >
+    &copy; okshouiti. 最終更新: 2021-01-18. <small>built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a></small>.
+  </div>
+</div>
+</div>
+    </div>
