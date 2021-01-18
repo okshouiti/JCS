@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  {{if hasmath}} {{insert head_katex.html }} {{end}}
+  <script src="/libs/main.js"></script>
+  <link rel="stylesheet" href="/css/reboot.css">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="icon" href="/assets/favicon.png">
+  {{isdef title}} <title>{{fill title}}</title> {{end}}
+</head>
+<body>
+<style>
+  span.name {
+    color: #50b949;
+    font-family: Cica
+  }
+</style>
+<div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <div class="top">JCS</div>
+      <div class="lead">Julia Cheat Site.</div>
+    </div>
+    <nav class="sidebar-nav">
+      <ul class="menu-list">
+        <li class="menu-parent"><a href="/" class="menu-link">トップ</a>
+        <li class="menu-parent {{ispage manual/*}}active{{end}}"><a href="/manual/getting-started/" class="menu-link">マニュアル</a>
+          <ul class="menu-child">
+            {{for p in manual}}
+              <li><a class="{{ispage {{p}}}}active{{end}}" href="/{{fill p}}/">{{fill title p}}</a></li>
+            {{end}}
+          </ul>
+        <!-- <li class="menu-parent {{ispage base/*}}active{{end}}"><a href="/base/essentials/" class="menu-link">Base</a>
+          <ul class="menu-child">
+            {{for p in base}}
+              <li><a class="{{ispage {{p}}}}active{{end}}" href="/{{fill p}}/">{{fill title p}}</a></li>
+            {{end}}
+          </ul>
+        <li class="menu-parent {{ispage omake/*}}active{{end}}"><a href="/omake/Cascadia.jl/" class="menu-link">おまけ</a>
+          <ul class="menu-child">
+            {{for p in omake}}
+              <li><a class="{{ispage {{p}}}}active{{end}}" href="/{{fill p}}/">{{fill title p}}</a></li>
+            {{end}}
+          </ul> -->
+      </ul>
+    </nav>
+  </div>
+</div>
+<div class="content container">
+  <header>
+    <div class="sidebar-button" onclick="toggle()">
+      <div class="bar1"></div>
+      <div class="bar2"></div>
+      <div class="bar3"></div>
+    </div>
+  </header>
+<!-- Content appended here -->
